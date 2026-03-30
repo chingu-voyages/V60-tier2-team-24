@@ -36,7 +36,7 @@ coding!
 
 - Jose Cruz: [GitHub] https://github.com/Cruz3196 / [LinkedIn] www.linkedin.com/in/jose-cruz-6056322b3
 
-- Ruth Igwe-Oruta: [GitHub]([https://github.com/ghaccountname)](https://github.com/Xondacc) / [LinkedIn]([https://linkedin.com/in/liaccountname](https://www.linkedin.com/in/ruthigwe-oruta/))
+- Ruth Igwe-Oruta: [GitHub]([url](https://github.com/Xondacc)) / [LinkedIn]([url](https://www.linkedin.com/in/ruthigwe-oruta/))  
 
   ...
 
