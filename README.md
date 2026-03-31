@@ -42,6 +42,8 @@ coding!
 
 - Pooja Balachandran: [GitHub] https://github.com/PCoderHub / [LinkedIn] https://www.linkedin.com/in/poojapbalachandran/
 
+- Eduard: [GitHub] https://github.com/EduardDE7
+
   ...
 
 - Teammate name #n: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
