@@ -35,14 +35,11 @@ your repo access and to practice PR'ing with your team _before_ you start
 coding!
 
 - Jose Cruz: [GitHub] https://github.com/Cruz3196 / [LinkedIn] www.linkedin.com/in/jose-cruz-6056322b3
-
 - Ruth Igwe-Oruta: [GitHub] https://github.com/Xondacc / [LinkedIn] https://www.linkedin.com/in/ruthigwe-oruta/
-
 - Sasikumar Velmurugan: [GitHub] https://github.com/vel-sk98 / [LinkedIn] https://www.linkedin.com/in/sasivel/
-
 - Pooja Balachandran: [GitHub] https://github.com/PCoderHub / [LinkedIn] https://www.linkedin.com/in/poojapbalachandran/
-
 - Eduard: [GitHub] https://github.com/EduardDE7
+- Shivani Bhardwaj: [GitHub] https://github.com/shivanibhardwaj0911 / [LinkedIn] https://www.linkedin.com/in/shivanibdwj
 
   ...
 
