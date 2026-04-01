@@ -28,16 +28,6 @@ export const LocalStorage = {
   set<K extends Keys>(key: K, value: LocalStorageSchema[K]) {
     window.localStorage.setItem(key, JSON.stringify(value));
   },
-  // this is the update function, k will extend keys.
-  update<K extends Keys>(key: K, value: Partial<LocalStorageSchema[K]>) {
-    const existingValue = this.get(key);
-    if (existingValue) {
-      const updatedValue = { ...existingValue, ...value };
-      this.set(key, updatedValue);
-    } else {
-      console.error(`no existing value found in localStorage for key: ${key}`);
-    }
-  },
   // Update a specific application by index with partial changes
   updateApplication(index: number, changes: Partial<Application>) {
     const apps = this.get("applications") || [];
