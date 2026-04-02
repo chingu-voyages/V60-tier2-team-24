@@ -1,5 +1,5 @@
 // Setting up the data stored in the local storage
-type Application = {
+export type Application = {
   CompanyName: string;
   Role: string;
   DateApplied: string;
