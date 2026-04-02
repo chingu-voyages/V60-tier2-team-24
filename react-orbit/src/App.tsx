@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import ApplicationList from "@/components/applications/ApplicationList";
 
 function App() {
   return (
@@ -11,6 +12,9 @@ function App() {
         <Button variant="outline">Outline</Button>
         <Button variant="destructive">Destructive</Button>
       </div>
+
+      <h2 className="text-2xl font-bold mt-8 mb-4">Applications</h2>
+      <ApplicationList />
     </div>
   );
 }
