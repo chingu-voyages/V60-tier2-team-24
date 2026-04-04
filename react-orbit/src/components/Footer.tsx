@@ -23,10 +23,10 @@ export const Footer = () => {
               </button>
               {show && 
                   <div className="mt-1 flex flex-col items-center">
-                      <span className="mb-2 text-[10px]font-medium uppercase tracking-[1px] text-[#cbd5e1]">
+                      <span className="mb-2 text-[10px] font-medium uppercase tracking-[1px] text-[#cbd5e1]">
                           Team Members:
                       </span>
-                    <div className="max-h-[104px] overflow-y-auto scrollbar-hide">
+                    <div className="max-h-28 overflow-y-auto scrollbar-hide">
                       {teamMembers.map((member, index) => (
                           <a
                               key={index}
