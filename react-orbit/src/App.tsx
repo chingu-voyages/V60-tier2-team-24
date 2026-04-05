@@ -1,5 +1,6 @@
 
 import { Footer } from "./components/Footer";
+import ApplicationList from "@/components/applications/ApplicationList";
 
 function App() {
   return (
@@ -9,6 +10,8 @@ function App() {
         <p className="mt-2 text-[#424654]">
           Manage your Career journey and tract prospects.
         </p>
+        <h2 className="text-2xl font-bold mt-8 mb-4">Applications</h2>
+        <ApplicationList />
       </main>
 
       {/* Footer */}
