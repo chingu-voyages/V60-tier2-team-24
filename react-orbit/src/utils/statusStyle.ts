@@ -8,7 +8,7 @@ export const getStatusStyles = (status: string) => {
     case "interview":
       return {
         border: "border-blue-500",
-        badge: "bg-blue-200 text-gray-500",
+        badge: "bg-blue-200 text-gray-800",
       };
     case "accepted":
     case "offer":
