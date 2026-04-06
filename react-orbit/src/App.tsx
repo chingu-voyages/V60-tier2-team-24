@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import NewApplicationModal from "./components/NewApplicationModal";
 
+
 function App() {
   const [open, setOpen] = useState(false);
 
