@@ -3,7 +3,9 @@ export type Application = {
   CompanyName: string;
   Role: string;
   DateApplied: string;
+  Location: string;
   Status: string;
+  JobLink: string;
   Notes: string;
 };
 
