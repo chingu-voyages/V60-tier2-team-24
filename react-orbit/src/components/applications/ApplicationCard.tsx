@@ -1,9 +1,8 @@
 import { getTimeAgo } from "@/utils/date";
 import { Application } from "@/utils/localStorage";
-import { MoreVertical } from "lucide-react";
-import { Button } from "../ui/button";
 import { getStatusStyles } from "@/utils/statusStyle";
 import { cn } from "@/lib/utils";
+import ApplicationActions from "./ApplicationActions";
 
 function ApplicationCard({ application }: { application: Application }) {
   const styles = getStatusStyles(application.Status);
@@ -20,10 +19,10 @@ function ApplicationCard({ application }: { application: Application }) {
           <h3 className="text-lg font-bold">{application.CompanyName}</h3>
           <p className="flex flex-wrap items-center gap-2 text-xs text-gray-600 font-semibold">
             <span>{application.Role}</span>
-            <div>
+            <>
               <span className="w-1 h-1 bg-gray-500 rounded-full inline-block mr-1 font-semibold"></span>
               <span>Applied {getTimeAgo(application.DateApplied)}</span>
-            </div>
+            </>
           </p>
         </div>
 
@@ -36,9 +35,7 @@ function ApplicationCard({ application }: { application: Application }) {
           >
             {application.Status.toUpperCase()}
           </span>
-          <Button variant="ghost" size="icon">
-            <MoreVertical className="text-gray-400" />
-          </Button>
+          <ApplicationActions />
         </div>
       </div>
     </div>
