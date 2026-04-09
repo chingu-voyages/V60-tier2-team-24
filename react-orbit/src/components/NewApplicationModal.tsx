@@ -24,7 +24,7 @@ import {
 } from "./ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Application, LocalStorage } from "@/utils/localStorage";
+import { Application } from "@/utils/localStorage";
 import { useEffect, useRef, useState } from "react";
 import { applicationSchema } from "@/lib/application";
 import { toast } from "sonner";
@@ -34,6 +34,9 @@ type NewApplicationModalProps = {
   onOpenChange: (open: boolean) => void;
   editApplication?: Application;
   index?: number;
+
+  onSave: (application: Application) => void;
+  onUpdate: (index: number, application: Application) => void;
 };
 
 const NewApplicationModal = ({
@@ -41,6 +44,8 @@ const NewApplicationModal = ({
   onOpenChange,
   editApplication,
   index,
+  onSave,
+  onUpdate,
 }: NewApplicationModalProps) => {
   // Refs for form inputs
   const companyName = useRef<HTMLInputElement>(null);
@@ -113,11 +118,13 @@ const NewApplicationModal = ({
     // Clear any previous errors
     setErrors({});
 
-    // Get existing applications, add the new one, and save back to localStorage
-    const existing = LocalStorage.get("applications") ?? [];
-    LocalStorage.set("applications", [...existing, validation.data]);
-
-    toast.success("Application saved!");
+    if (editApplication && index !== undefined) {
+      onUpdate(index, validation.data);
+      toast.success("Application updated!");
+    } else {
+      onSave(validation.data);
+      toast.success("Application saved!");
+    }
     // close modal after saving
     onOpenChange(false);
   };
@@ -126,7 +133,9 @@ const NewApplicationModal = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Application</DialogTitle>
+          <DialogTitle>
+            {editApplication ? "Edit Application" : "Add New Application"}
+          </DialogTitle>
           <DialogDescription>
             Fill in the details of your latest career opportunity
           </DialogDescription>
@@ -301,7 +310,7 @@ const NewApplicationModal = ({
             className="bg-[#0040a1] hover:bg-[#003080]"
             onClick={saveApplication}
           >
-            Save Application
+            {editApplication ? "Update Application" : "Save Application"}
           </Button>
         </div>
       </DialogContent>

@@ -7,9 +7,11 @@ import ApplicationActions from "./ApplicationActions";
 function ApplicationCard({
   application,
   index,
+  onEdit,
 }: {
   application: Application;
   index: number;
+  onEdit: (application: Application, index: number) => void;
 }) {
   const styles = getStatusStyles(application.Status);
 
@@ -41,7 +43,11 @@ function ApplicationCard({
           >
             {application.Status.toUpperCase()}
           </span>
-          <ApplicationActions index={index} application={application} />
+          <ApplicationActions
+            index={index}
+            application={application}
+            onEdit={onEdit}
+          />
         </div>
       </div>
     </div>
