@@ -16,7 +16,10 @@ function ApplicationActions() {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent
+        align="end"
+        className="border-gray-200 shadow-lg rounded-lg"
+      >
         <DropdownMenuItem className="p-4">
           <Pencil className="mr-2 text-gray-400" />
           <span className="font-semibold text-sm">Edit Application</span>
