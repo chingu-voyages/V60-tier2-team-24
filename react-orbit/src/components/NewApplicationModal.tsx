@@ -24,7 +24,7 @@ import {
 } from "./ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { LocalStorage } from "@/utils/localStorage";
+import { Application, LocalStorage } from "@/utils/localStorage";
 import { useRef, useState } from "react";
 import { applicationSchema } from "@/lib/application";
 import { toast } from "sonner";
@@ -32,6 +32,8 @@ import { toast } from "sonner";
 type NewApplicationModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  editApplication?: Application;
+  index?: number;
 };
 
 const NewApplicationModal = ({

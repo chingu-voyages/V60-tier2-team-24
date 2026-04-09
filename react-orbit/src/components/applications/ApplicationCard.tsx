@@ -4,7 +4,13 @@ import { getStatusStyles } from "@/utils/statusStyle";
 import { cn } from "@/lib/utils";
 import ApplicationActions from "./ApplicationActions";
 
-function ApplicationCard({ application }: { application: Application }) {
+function ApplicationCard({
+  application,
+  index,
+}: {
+  application: Application;
+  index: number;
+}) {
   const styles = getStatusStyles(application.Status);
 
   return (
@@ -35,7 +41,7 @@ function ApplicationCard({ application }: { application: Application }) {
           >
             {application.Status.toUpperCase()}
           </span>
-          <ApplicationActions />
+          <ApplicationActions index={index} application={application} />
         </div>
       </div>
     </div>

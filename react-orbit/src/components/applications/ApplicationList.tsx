@@ -13,7 +13,7 @@ function ApplicationList() {
     <div className="grid gap-4">
       {applications.map((application, index) => (
         // key to be changed to id when backend is implemented
-        <ApplicationCard key={index} application={application} />
+        <ApplicationCard key={index} application={application} index={index} />
       ))}
     </div>
   );
