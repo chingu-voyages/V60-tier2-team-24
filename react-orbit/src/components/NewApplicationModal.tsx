@@ -134,7 +134,7 @@ const NewApplicationModal = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {editApplication ? "Edit Application" : "Add New Application"}
+            {index !== undefined ? "Edit Application" : "Add New Application"}
           </DialogTitle>
           <DialogDescription>
             Fill in the details of your latest career opportunity
@@ -310,7 +310,7 @@ const NewApplicationModal = ({
             className="bg-[#0040a1] hover:bg-[#003080]"
             onClick={saveApplication}
           >
-            {editApplication ? "Update Application" : "Save Application"}
+            {index !== undefined ? "Update Application" : "Save Application"}
           </Button>
         </div>
       </DialogContent>

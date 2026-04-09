@@ -11,6 +11,8 @@ export function ApplicationsPage() {
   const [editApplication, setEditApplication] = useState<
     Application | undefined
   >(undefined);
+
+  // NOTE: index for update application - need to switch to proper id when backend implementation to avoid wrong renders
   const [editIndex, setEditIndex] = useState<number | undefined>(undefined);
 
   return (
