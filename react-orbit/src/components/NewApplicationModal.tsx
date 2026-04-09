@@ -25,7 +25,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Application, LocalStorage } from "@/utils/localStorage";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { applicationSchema } from "@/lib/application";
 import { toast } from "sonner";
 
@@ -39,6 +39,8 @@ type NewApplicationModalProps = {
 const NewApplicationModal = ({
   open,
   onOpenChange,
+  editApplication,
+  index,
 }: NewApplicationModalProps) => {
   // Refs for form inputs
   const companyName = useRef<HTMLInputElement>(null);
@@ -53,6 +55,33 @@ const NewApplicationModal = ({
 
   // Per-field validation errors (keys match the Zod schema field names)
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Pre-populate with existing application data if editing
+  useEffect(() => {
+    if (editApplication && open) {
+      setTimeout(() => {
+        if (companyName.current) {
+          companyName.current.value = editApplication.CompanyName;
+        }
+        if (role.current) {
+          role.current.value = editApplication.Role;
+        }
+        if (dateApplied.current) {
+          dateApplied.current.value = editApplication.DateApplied;
+        }
+        if (location.current) {
+          location.current.value = editApplication.Location;
+        }
+        if (jobLink.current) {
+          jobLink.current.value = editApplication.JobLink;
+        }
+        if (notes.current) {
+          notes.current.value = editApplication.Notes;
+        }
+        setStatus(editApplication.Status.toLowerCase());
+      }, 0);
+    }
+  }, [editApplication, open]);
 
   // Save application into LocalStorage
   const saveApplication = () => {
