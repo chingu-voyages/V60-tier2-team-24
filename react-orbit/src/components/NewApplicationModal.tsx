@@ -25,7 +25,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Application } from "@/utils/localStorage";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { applicationSchema } from "@/lib/application";
 import { toast } from "sonner";
 
@@ -39,6 +39,16 @@ type NewApplicationModalProps = {
   onUpdate: (index: number, application: Application) => void;
 };
 
+const getInitialState = (application?: Application | null): Application => ({
+  CompanyName: application?.CompanyName || "",
+  Role: application?.Role || "",
+  DateApplied: application?.DateApplied || "",
+  Location: application?.Location || "",
+  Status: application?.Status || "applied",
+  JobLink: application?.JobLink || "",
+  Notes: application?.Notes || "",
+});
+
 const NewApplicationModal = ({
   open,
   onOpenChange,
@@ -47,60 +57,23 @@ const NewApplicationModal = ({
   onSave,
   onUpdate,
 }: NewApplicationModalProps) => {
-  // Refs for form inputs
-  const companyName = useRef<HTMLInputElement>(null);
-  const role = useRef<HTMLInputElement>(null);
-  const dateApplied = useRef<HTMLInputElement>(null);
-  const location = useRef<HTMLInputElement>(null);
-  const jobLink = useRef<HTMLInputElement>(null);
-  const notes = useRef<HTMLTextAreaElement>(null);
-
-  // Radix Select doesn't expose its value via a DOM ref — use state
-  const [status, setStatus] = useState("");
+  const [formState, setFormState] = useState<Application>(() =>
+    getInitialState(editApplication),
+  );
 
   // Per-field validation errors (keys match the Zod schema field names)
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Pre-populate with existing application data if editing
-  useEffect(() => {
-    if (editApplication && open) {
-      setTimeout(() => {
-        if (companyName.current) {
-          companyName.current.value = editApplication.CompanyName;
-        }
-        if (role.current) {
-          role.current.value = editApplication.Role;
-        }
-        if (dateApplied.current) {
-          dateApplied.current.value = editApplication.DateApplied;
-        }
-        if (location.current) {
-          location.current.value = editApplication.Location;
-        }
-        if (jobLink.current) {
-          jobLink.current.value = editApplication.JobLink;
-        }
-        if (notes.current) {
-          notes.current.value = editApplication.Notes;
-        }
-        setStatus(editApplication.Status.toLowerCase());
-      }, 0);
-    }
-  }, [editApplication, open]);
+  const updateInput = <K extends keyof Application>(
+    field: K,
+    value: Application[K],
+  ) => {
+    setFormState((prev) => ({ ...prev, [field]: value }));
+  };
 
   // Save application into LocalStorage
   const saveApplication = () => {
-    const newApplication = {
-      CompanyName: companyName.current?.value || "",
-      Role: role.current?.value || "",
-      DateApplied: dateApplied.current?.value || "",
-      Location: location.current?.value || "",
-      Status: status,
-      JobLink: jobLink.current?.value || "",
-      Notes: notes.current?.value || "",
-    };
-
-    const validation = applicationSchema.safeParse(newApplication);
+    const validation = applicationSchema.safeParse(formState);
     if (!validation.success) {
       // Build a map of field name → first error message
       const fieldErrors: Record<string, string> = {};
@@ -127,6 +100,7 @@ const NewApplicationModal = ({
     }
     // close modal after saving
     onOpenChange(false);
+    setFormState(getInitialState(undefined));
   };
 
   return (
@@ -157,7 +131,8 @@ const NewApplicationModal = ({
                 type="text"
                 className={`pl-10 ${errors.CompanyName ? "border-red-500" : ""}`}
                 placeholder="e.g. Acme Corp"
-                ref={companyName}
+                value={formState.CompanyName}
+                onChange={(e) => updateInput("CompanyName", e.target.value)}
               />
             </div>
             {errors.CompanyName && (
@@ -180,7 +155,8 @@ const NewApplicationModal = ({
                 type="text"
                 className={`pl-10 ${errors.Role ? "border-red-500" : ""}`}
                 placeholder="e.g. Software Engineer"
-                ref={role}
+                value={formState.Role}
+                onChange={(e) => updateInput("Role", e.target.value)}
               />
             </div>
             {errors.Role && (
@@ -202,7 +178,8 @@ const NewApplicationModal = ({
                 id="date-applied"
                 type="date"
                 className={`pl-10 ${errors.DateApplied ? "border-red-500" : ""}`}
-                ref={dateApplied}
+                value={formState.DateApplied}
+                onChange={(e) => updateInput("DateApplied", e.target.value)}
               />
             </div>
             {errors.DateApplied && (
@@ -225,7 +202,8 @@ const NewApplicationModal = ({
                 type="text"
                 className={`pl-10 ${errors.Location ? "border-red-500" : ""}`}
                 placeholder="e.g. New York, NY"
-                ref={location}
+                value={formState.Location}
+                onChange={(e) => updateInput("Location", e.target.value)}
               />
             </div>
             {errors.Location && (
@@ -243,7 +221,10 @@ const NewApplicationModal = ({
               <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <CircleDot className=" h-4 w-4 text-[#94a3b8]" />
               </span>
-              <Select value={status} onValueChange={setStatus}>
+              <Select
+                value={formState.Status}
+                onValueChange={(value) => updateInput("Status", value)}
+              >
                 <SelectTrigger className="pl-10">
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
@@ -275,7 +256,8 @@ const NewApplicationModal = ({
                 type="text"
                 className={`pl-10 ${errors.JobLink ? "border-red-500" : ""}`}
                 placeholder="e.g. https://example.com/job..."
-                ref={jobLink}
+                value={formState.JobLink}
+                onChange={(e) => updateInput("JobLink", e.target.value)}
               />
             </div>
             {errors.JobLink && (
@@ -292,7 +274,8 @@ const NewApplicationModal = ({
             <div className="relative">
               <Textarea
                 id="notes"
-                ref={notes}
+                value={formState.Notes}
+                onChange={(e) => updateInput("Notes", e.target.value)}
                 className={errors.Notes ? "border-red-500" : ""}
                 placeholder="Mention key requirements, interview stages, or personal thoughts..."
               />

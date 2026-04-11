@@ -35,6 +35,7 @@ export function ApplicationsPage() {
           + Add Application
         </Button>
         <NewApplicationModal
+          key={editIndex !== undefined ? `edit-${editIndex}` : "new"} // temporary key until proper id
           open={open}
           onOpenChange={(val) => {
             setOpen(val);
