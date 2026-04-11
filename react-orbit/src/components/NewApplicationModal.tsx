@@ -32,8 +32,8 @@ import { toast } from "sonner";
 type NewApplicationModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  editApplication?: Application;
-  index?: number;
+  editApplication?: Application | null;
+  index?: number | null;
 
   onSave: (application: Application) => void;
   onUpdate: (index: number, application: Application) => void;
@@ -91,8 +91,8 @@ const NewApplicationModal = ({
     // Clear any previous errors
     setErrors({});
 
-    if (editApplication && index !== undefined) {
-      onUpdate(index, validation.data);
+    if (editApplication && index !== null) {
+      onUpdate(index as number, validation.data);
       toast.success("Application updated!");
     } else {
       onSave(validation.data);
@@ -108,7 +108,7 @@ const NewApplicationModal = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {index !== undefined ? "Edit Application" : "Add New Application"}
+            {index !== null ? "Edit Application" : "Add New Application"}
           </DialogTitle>
           <DialogDescription>
             Fill in the details of your latest career opportunity
@@ -293,7 +293,7 @@ const NewApplicationModal = ({
             className="bg-[#0040a1] hover:bg-[#003080]"
             onClick={saveApplication}
           >
-            {index !== undefined ? "Update Application" : "Save Application"}
+            {index !== null ? "Update Application" : "Save Application"}
           </Button>
         </div>
       </DialogContent>

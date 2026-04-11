@@ -7,12 +7,24 @@ import { useApplications } from "@/hooks/useApplications";
 
 export function DashboardPage() {
   const [open, setOpen] = useState(false);
-  const [editApplication, setEditApplication] = useState<
-    Application | undefined
-  >();
-  const [editIndex, setEditIndex] = useState<number | undefined>(undefined);
+  const [editApplication, setEditApplication] = useState<Application | null>(
+    null,
+  );
+  const [editIndex, setEditIndex] = useState<number | null>(null);
 
   const { applications, addApplication, updateApplication } = useApplications();
+
+  const handleCreate = () => {
+    setEditApplication(null);
+    setEditIndex(null);
+    setOpen(true);
+  };
+
+  const handleEdit = (app: Application, index: number) => {
+    setEditApplication(app);
+    setEditIndex(index);
+    setOpen(true);
+  };
 
   return (
     <>
@@ -22,23 +34,20 @@ export function DashboardPage() {
       </p>
 
       <Button
-        onClick={() => {
-          setEditApplication(undefined);
-          setEditIndex(undefined);
-          setOpen(true);
-        }}
+        onClick={handleCreate}
         className="bg-[#0040a1] hover:bg-[#003080] text-white"
       >
         + Add Application
       </Button>
       <NewApplicationModal
+        key={editIndex !== null ? `edit-${editIndex}` : "new"} // temporary key until proper id
         open={open}
         onOpenChange={(val) => {
           setOpen(val);
 
           if (!val) {
-            setEditApplication(undefined);
-            setEditIndex(undefined);
+            setEditApplication(null);
+            setEditIndex(null);
           }
         }}
         editApplication={editApplication}
@@ -48,14 +57,7 @@ export function DashboardPage() {
       />
 
       <h2 className="text-2xl font-bold mt-8 mb-4">Applications</h2>
-      <ApplicationList
-        applications={applications}
-        onEdit={(app, index) => {
-          setEditApplication(app);
-          setEditIndex(index);
-          setOpen(true);
-        }}
-      />
+      <ApplicationList applications={applications} onEdit={handleEdit} />
     </>
   );
 }

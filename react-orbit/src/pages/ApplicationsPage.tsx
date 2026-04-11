@@ -8,12 +8,23 @@ import { Application } from "@/utils/localStorage";
 export function ApplicationsPage() {
   const [open, setOpen] = useState(false);
   const { applications, addApplication, updateApplication } = useApplications();
-  const [editApplication, setEditApplication] = useState<
-    Application | undefined
-  >(undefined);
+  const [editApplication, setEditApplication] = useState<Application | null>(
+    null,
+  );
 
   // NOTE: index for update application - need to switch to proper id when backend implementation to avoid wrong renders
-  const [editIndex, setEditIndex] = useState<number | undefined>(undefined);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+
+  const handleCreate = () => {
+    setEditApplication(null);
+    setEditIndex(null);
+    setOpen(true);
+  };
+  const handleEdit = (app: Application, index: number) => {
+    setEditApplication(app);
+    setEditIndex(index);
+    setOpen(true);
+  };
 
   return (
     <section className="space-y-6">
@@ -25,23 +36,19 @@ export function ApplicationsPage() {
           Manage your career journey and track prospects
         </p>
         <Button
-          onClick={() => {
-            setEditApplication(undefined);
-            setEditIndex(undefined);
-            setOpen(true);
-          }}
+          onClick={handleCreate}
           className="bg-[#0040a1] hover:bg-[#003080] text-white"
         >
           + Add Application
         </Button>
         <NewApplicationModal
-          key={editIndex !== undefined ? `edit-${editIndex}` : "new"} // temporary key until proper id
+          key={editIndex !== null ? `edit-${editIndex}` : "new"} // temporary key until proper id
           open={open}
           onOpenChange={(val) => {
             setOpen(val);
             if (!val) {
-              setEditApplication(undefined);
-              setEditIndex(undefined);
+              setEditApplication(null);
+              setEditIndex(null);
             }
           }}
           editApplication={editApplication}
@@ -51,14 +58,7 @@ export function ApplicationsPage() {
         />
       </div>
 
-      <ApplicationList
-        applications={applications}
-        onEdit={(app, index) => {
-          setEditApplication(app);
-          setEditIndex(index);
-          setOpen(true);
-        }}
-      />
+      <ApplicationList applications={applications} onEdit={handleEdit} />
     </section>
   );
 }
