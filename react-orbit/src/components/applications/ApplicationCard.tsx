@@ -1,5 +1,5 @@
 import { getTimeAgo } from "@/utils/date";
-import { Application } from "@/utils/localStorage";
+import { Application } from "@/lib/application";
 import { getStatusStyles } from "@/utils/statusStyle";
 import { cn } from "@/lib/utils";
 import ApplicationActions from "./ApplicationActions";
