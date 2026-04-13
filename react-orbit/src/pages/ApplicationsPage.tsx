@@ -2,28 +2,46 @@ import ApplicationList from "@/components/applications/ApplicationList";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import NewApplicationModal from "@/components/NewApplicationModal";
+import DeleteConfirmationModal from "@/components/applications/ConfirmDeleteModal";
+
 import { useApplications } from "@/hooks/useApplications";
 import { Application } from "@/utils/localStorage";
 
 export function ApplicationsPage() {
   const [open, setOpen] = useState(false);
-  const { applications, addApplication, updateApplication } = useApplications();
+  const [removeOpen, setRemoveOpen] = useState(false);
+
+  const { applications, addApplication, updateApplication, removeApplication } =
+    useApplications();
   const [editApplication, setEditApplication] = useState<Application | null>(
     null,
   );
 
   // NOTE: index for update application - need to switch to proper id when backend implementation to avoid wrong renders
   const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
   const handleCreate = () => {
     setEditApplication(null);
     setEditIndex(null);
     setOpen(true);
   };
+  
   const handleEdit = (app: Application, index: number) => {
     setEditApplication(app);
     setEditIndex(index);
     setOpen(true);
+  };
+
+  const handleDelete = (index: number) => {
+    setDeleteIndex(index);
+    setRemoveOpen(true);
+  };
+
+  const handleRemoveConfirm = () => {
+    if (deleteIndex !== null) removeApplication(deleteIndex);
+    setDeleteIndex(null)
+    setRemoveOpen(false)
   };
 
   return (
@@ -58,7 +76,19 @@ export function ApplicationsPage() {
         />
       </div>
 
-      <ApplicationList applications={applications} onEdit={handleEdit} />
+      <ApplicationList
+        applications={applications}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+
+      {removeOpen ? (
+        <DeleteConfirmationModal
+          open={removeOpen}
+          onOpenChange={setRemoveOpen}
+          onConfirm={handleRemoveConfirm}
+        />
+      ) : null}
     </section>
   );
 }

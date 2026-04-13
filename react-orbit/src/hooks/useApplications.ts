@@ -25,10 +25,18 @@ export function useApplications() {
     }
   };
 
+  const removeApplication = (index: number) => {
+    const updatedApplications = LocalStorage.removeApplication(index);
+    if (updatedApplications) {
+      setApplications(updatedApplications);
+    }
+  };
+
   return {
     applications,
     setApplications,
     addApplication,
     updateApplication,
+    removeApplication,
   };
 }

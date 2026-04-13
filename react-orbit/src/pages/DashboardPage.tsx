@@ -2,17 +2,23 @@ import ApplicationList from "@/components/applications/ApplicationList";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import NewApplicationModal from "@/components/NewApplicationModal";
+import DeleteConfirmationModal from "@/components/applications/ConfirmDeleteModal";
+
 import { Application } from "@/utils/localStorage";
 import { useApplications } from "@/hooks/useApplications";
 
 export function DashboardPage() {
   const [open, setOpen] = useState(false);
+  const [removeOpen, setRemoveOpen] = useState(false);
+
   const [editApplication, setEditApplication] = useState<Application | null>(
     null,
   );
   const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
-  const { applications, addApplication, updateApplication } = useApplications();
+  const { applications, addApplication, updateApplication, removeApplication } =
+    useApplications();
 
   const handleCreate = () => {
     setEditApplication(null);
@@ -24,6 +30,17 @@ export function DashboardPage() {
     setEditApplication(app);
     setEditIndex(index);
     setOpen(true);
+  };
+
+  const handleDelete = (index: number) => {
+    setDeleteIndex(index);
+    setRemoveOpen(true);
+  };
+
+  const handleRemoveConfirm = () => {
+    if (deleteIndex !== null) removeApplication(deleteIndex);
+    setDeleteIndex(null);
+    setRemoveOpen(false);
   };
 
   return (
@@ -57,7 +74,19 @@ export function DashboardPage() {
       />
 
       <h2 className="text-2xl font-bold mt-8 mb-4">Applications</h2>
-      <ApplicationList applications={applications} onEdit={handleEdit} />
+      <ApplicationList
+        applications={applications}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+
+      {removeOpen ? (
+        <DeleteConfirmationModal
+          open={removeOpen}
+          onOpenChange={setRemoveOpen}
+          onConfirm={handleRemoveConfirm}
+        />
+      ) : null}
     </>
   );
 }
