@@ -1,6 +1,8 @@
-import ApplicationList from "@/components/applications/ApplicationList";
 import { useState } from "react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
+import ApplicationList from "@/components/applications/ApplicationList";
 import NewApplicationModal from "@/components/NewApplicationModal";
 import DeleteConfirmationModal from "@/components/applications/ConfirmDeleteModal";
 
@@ -41,6 +43,12 @@ export function DashboardPage() {
     if (deleteIndex !== null) removeApplication(deleteIndex);
     setDeleteIndex(null);
     setRemoveOpen(false);
+    toast.success("Application removed!");
+  };
+
+  const handleRemoveOpenChange = (open: boolean) => {
+    setRemoveOpen(open);
+    if (!open) setDeleteIndex(null);
   };
 
   return (
@@ -80,13 +88,11 @@ export function DashboardPage() {
         onDelete={handleDelete}
       />
 
-      {removeOpen ? (
-        <DeleteConfirmationModal
-          open={removeOpen}
-          onOpenChange={setRemoveOpen}
-          onConfirm={handleRemoveConfirm}
-        />
-      ) : null}
+      <DeleteConfirmationModal
+        open={removeOpen}
+        onOpenChange={handleRemoveOpenChange}
+        onConfirm={handleRemoveConfirm}
+      />
     </>
   );
 }
