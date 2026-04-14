@@ -8,10 +8,12 @@ function ApplicationCard({
   application,
   index,
   onEdit,
+  onDelete
 }: {
   application: Application;
   index: number;
   onEdit: (application: Application, index: number) => void;
+  onDelete: (index: number) => void;
 }) {
   const styles = getStatusStyles(application.Status);
 
@@ -47,6 +49,7 @@ function ApplicationCard({
             index={index}
             application={application}
             onEdit={onEdit}
+            onDelete={onDelete}
           />
         </div>
       </div>
