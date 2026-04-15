@@ -13,11 +13,11 @@ import { cn } from "@/lib/utils";
 import {
   Calendar,
   MapPin,
-  Link as LinkIcon,
+  Link2 as LinkIcon,
   ExternalLink,
   CheckCircle2,
-  Circle,
-  SlidersHorizontal,
+  CircleDot,
+  TextAlignJustify,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -38,10 +38,10 @@ const JobDetailsModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] max-w-[600px] max-h-[90vh] overflow-y-auto p-4 sm:p-6 gap-0 rounded-xl">
-        <DialogHeader className="pb-4 sm:pb-6 border-b border-gray-200">
+      <DialogContent className="w-[95vw] max-w-[480px] max-h-[85vh] overflow-y-auto p-5 gap-0 rounded-xl">
+        <DialogHeader className="pb-3 border-b border-gray-100 mb-4">
           <div className="flex flex-wrap items-center gap-2">
-            <DialogTitle className="text-lg sm:text-xl font-bold">
+            <DialogTitle className="text-base font-extrabold">
               {application.CompanyName}
             </DialogTitle>
             <span
@@ -57,25 +57,29 @@ const JobDetailsModal = ({
             {application.Role}
           </DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pb-4 sm:pb-6 pt-4 sm:pt-6">
-          <div className="flex items-center gap-3 bg-gray-100 rounded-lg px-3 sm:px-4 py-3">
-            <Calendar className="h-5 w-5 text-blue-700 shrink-0" />
+        <div className="grid grid-cols-2 gap-2 pb-2 pt-3\">
+          <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-2.5 py-2.5">
+            <div className="bg-white rounded-md p-1.5 flex items-center justify-center shrink-0">
+              <Calendar className="h-4 w-4 text-blue-800" />
+            </div>
             <div className="min-w-0">
-              <p className="text-[11px] text-muted-foreground leading-none mb-0.5">
+              <p className="text-[10px] text-muted-foreground leading-tight mb-0.5">
                 Date Applied
               </p>
-              <p className="text-sm font-semibold truncate">
+              <p className="text-xs font-semibold truncate">
                 Applied {getTimeAgo(application.DateApplied)}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3 bg-gray-100 rounded-lg px-3 sm:px-4 py-3">
-            <MapPin className="h-5 w-5 text-blue-700 shrink-0" />
+          <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-2.5 py-2.5">
+            <div className="bg-white rounded-md p-1.5 flex items-center justify-center shrink-0">
+              <MapPin className="h-4 w-4 text-blue-800" />
+            </div>
             <div className="min-w-0">
-              <p className="text-[11px] text-muted-foreground leading-none mb-0.5">
+              <p className="text-[10px] text-muted-foreground leading-tight mb-0.5">
                 Location
               </p>
-              <p className="text-sm font-semibold truncate">
+              <p className="text-xs font-semibold truncate">
                 {application.Location}
               </p>
             </div>
@@ -87,48 +91,60 @@ const JobDetailsModal = ({
               href={application.JobLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 bg-gray-100 rounded-lg px-3 sm:px-4 py-3 group"
+              className="flex items-center gap-2 bg-gray-100 rounded-lg px-2.5 py-2.5 group"
             >
-              <LinkIcon className="h-5 w-5 text-blue-700 shrink-0" />
+              <div className="bg-white rounded-md p-1.5 flex items-center justify-center shrink-0">
+                <LinkIcon className="h-4 w-4 text-blue-800" />
+              </div>
               <div className="min-w-0 flex-1">
-                <p className="text-[11px] text-muted-foreground leading-none mb-0.5">
+                <p className="text-[10px] text-muted-foreground leading-tight mb-0.5">
                   Job Link
                 </p>
-                <p className="text-xs sm:text-sm font-semibold text-blue-700 truncate group-hover:underline">
+                <p className="text-xs font-semibold text-blue-800 truncate group-hover:underline">
                   {application.JobLink}
                 </p>
               </div>
-              <ExternalLink className="h-4 w-4 text-muted-foreground shrink-0" />
+              <ExternalLink className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
             </a>
           </div>
         )}
-        <div className="pb-4 sm:pb-6 pt-4 sm:pt-6">
+        <div className="pb-6 sm:pb-6 pt-6 sm:pt-6">
           <h4 className="text-xs font-bold tracking-wide uppercase mb-3 flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-foreground inline-block" />
             Milestones
           </h4>
 
-          <div className="relative ml-1 pl-6 border-l-2 border-blue-200 space-y-4">
+          <div className="relative ml-0 pl-5 space-y-5 py-2 sm:py-2">
             <div className="relative">
-              <CheckCircle2 className="absolute -left-[21px] top-0 h-5 w-5 text-blue-700 bg-white rounded-full" />
-              <p className="text-sm font-semibold">Applied</p>
-              <p className="text-xs text-muted-foreground">
-                {new Date(application.DateApplied).toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </p>
-            </div>
-            {application.Status.toLowerCase() !== "applied" && (
-              <div className="relative">
-                <Circle className="absolute -left-[21px] top-0 h-5 w-5 text-blue-700 bg-white rounded-full" />
-                <p className="text-sm font-semibold text-blue-700">
-                  {application.Status.charAt(0).toUpperCase() +
-                    application.Status.slice(1)}
+              <CheckCircle2 className="absolute -left-[21px] top-0 h-5 w-5 text-blue-800 bg-white rounded-full" />
+              <div className="pl-3">
+                <p className="text-sm font-semibold">Applied</p>
+                <p className="text-xs text-muted-foreground">
+                  {new Date(application.DateApplied).toLocaleDateString(
+                    "en-US",
+                    {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    },
+                  )}
                 </p>
-                <p className="text-xs text-muted-foreground">In progress</p>
               </div>
+            </div>
+            <div className="absolute left-2 top-8 bottom-10 w-0.5 bg-blue-200 -translate-x-1/2" />
+            {application.Status.toLowerCase() !== "applied" && (
+              <>
+                <div className="relative pt-4">
+                  <CircleDot className="absolute -left-[21px] top-4 h-5 w-5 text-blue-800 bg-white rounded-full" />
+                  <div className="pl-3">
+                    <p className="text-sm font-semibold text-blue-800">
+                      {application.Status.charAt(0).toUpperCase() +
+                        application.Status.slice(1)}
+                    </p>
+                    <p className="text-xs text-muted-foreground">In progress</p>
+                  </div>
+                </div>
+              </>
             )}
           </div>
         </div>
@@ -138,22 +154,22 @@ const JobDetailsModal = ({
               <h4 className="text-xs font-bold tracking-wide uppercase">
                 Application Notes
               </h4>
-              <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
+              <TextAlignJustify className="h-4 w-4 text-muted-foreground" />
             </div>
             <div className="bg-white rounded-lg shadow hover:shadow-md transition p-3 sm:p-5 border-l-4 border-blue-700 text-sm">
               {application.Notes}
             </div>
           </div>
         )}
-        <DialogFooter className="pt-4 sm:pt-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3">
+        <DialogFooter className="pt-4 sm:pt-6 flex flex-row justify-end gap-2 sm:gap-3">
           <Button
             variant="ghost"
-            className="text-muted-foreground w-full sm:w-auto"
+            className="text-muted-foreground w-auto rounded-full"
             onClick={() => onOpenChange(false)}
           >
             Close
           </Button>
-          <Button className="bg-blue-700 hover:bg-blue-800 text-white rounded-full px-6 w-full sm:w-auto">
+          <Button className="bg-blue-700 hover:bg-blue-800 text-white rounded-full px-6 w-auto">
             Edit Application
           </Button>
         </DialogFooter>

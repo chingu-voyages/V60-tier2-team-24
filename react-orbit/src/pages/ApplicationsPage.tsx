@@ -1,7 +1,7 @@
-import ApplicationList from '@/components/applications/ApplicationList';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import NewApplicationModal from '@/components/NewApplicationModal';
+import ApplicationList from "@/components/applications/ApplicationList";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import NewApplicationModal from "@/components/modals/NewApplicationModal";
 
 export function ApplicationsPage() {
   const [open, setOpen] = useState(false);
