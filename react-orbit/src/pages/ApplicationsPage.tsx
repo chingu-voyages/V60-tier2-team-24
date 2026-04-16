@@ -6,8 +6,10 @@ import ApplicationList from "@/components/applications/ApplicationList";
 import NewApplicationModal from "@/components/modals/NewApplicationModal";
 import JobDetailsModal from "@/components/modals/JobDetailsModal";
 import DeleteConfirmationModal from "@/components/applications/ConfirmDeleteModal";
+import ApplicationsStatusFilter from "@/components/applications/ApplicationsStatusFilter";
 
 import { useApplications } from "@/hooks/useApplications";
+import { useApplicationStatusFilter } from "@/hooks/useApplicationStatusFilter";
 import { Application } from "@/utils/localStorage";
 
 export function ApplicationsPage() {
@@ -19,6 +21,8 @@ export function ApplicationsPage() {
 
   const { applications, addApplication, updateApplication, removeApplication } =
     useApplications();
+  const { selectedStatuses, filteredApplications, toggleStatus } =
+    useApplicationStatusFilter(applications);
   const [editApplication, setEditApplication] = useState<Application | null>(
     null,
   );
@@ -63,19 +67,29 @@ export function ApplicationsPage() {
 
   return (
     <section className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900">
-          Applications
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 md:text-base">
-          Manage your career journey and track prospects
-        </p>
-        <Button
-          onClick={handleCreate}
-          className="bg-[#0040a1] hover:bg-[#003080] text-white"
-        >
-          + Add Application
-        </Button>
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+            Applications
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 md:text-base">
+            Manage your career journey and track prospects
+          </p>
+        </div>
+
+        <div className="flex items-center justify-between gap-3">
+          <Button
+            onClick={handleCreate}
+            className="bg-[#0040a1] hover:bg-[#003080] text-white"
+          >
+            + Add Application
+          </Button>
+          <ApplicationsStatusFilter
+            selectedStatuses={selectedStatuses}
+            onToggleStatus={toggleStatus}
+          />
+        </div>
+
         <NewApplicationModal
           key={editIndex !== null ? `edit-${editIndex}` : "new"} // temporary key until proper id
           open={open}
@@ -94,7 +108,8 @@ export function ApplicationsPage() {
       </div>
 
       <ApplicationList
-        applications={applications}
+        applications={filteredApplications}
+        totalApplicationsCount={applications.length}
         onEdit={handleEdit}
         onDelete={handleDelete}
         onView={handleView}
