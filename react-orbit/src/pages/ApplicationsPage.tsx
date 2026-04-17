@@ -20,36 +20,42 @@ export function ApplicationsPage() {
   );
 
   // NOTE: index for update application - need to switch to proper id when backend implementation to avoid wrong renders
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const handleCreate = () => {
     setEditApplication(null);
-    setEditIndex(null);
+    setEditId(null);
     setOpen(true);
   };
 
-  const handleEdit = (app: Application, index: number) => {
+  const handleEdit = (app: Application) => {
     setEditApplication(app);
-    setEditIndex(index);
+    setEditId(app.id);
     setOpen(true);
   };
 
-  const handleDelete = (index: number) => {
-    setDeleteIndex(index);
+  const handleDelete = (id: string) => {
+    setDeleteId(id);
     setRemoveOpen(true);
   };
 
-  const handleRemoveConfirm = () => {
-    if (deleteIndex !== null) removeApplication(deleteIndex);
-    setDeleteIndex(null);
+  const handleRemoveConfirm = async () => {
+    if (deleteId !== null) {
+      try {
+        await removeApplication(deleteId);
+        toast.success("Application removed!");
+      } catch (error) {
+        toast.error("Failed to remove application.");
+      }
+    }
+    setDeleteId(null);
     setRemoveOpen(false);
-    toast.success("Application removed!");
   };
 
   const handleRemoveOpenChange = (open: boolean) => {
     setRemoveOpen(open);
-    if (!open) setDeleteIndex(null);
+    if (!open) setDeleteId(null);
   };
 
   return (
@@ -68,17 +74,17 @@ export function ApplicationsPage() {
           + Add Application
         </Button>
         <NewApplicationModal
-          key={editIndex !== null ? `edit-${editIndex}` : "new"} // temporary key until proper id
+          key={editId !== null ? `edit-${editId}` : "new"}
           open={open}
           onOpenChange={(val) => {
             setOpen(val);
             if (!val) {
               setEditApplication(null);
-              setEditIndex(null);
+              setEditId(null);
             }
           }}
           editApplication={editApplication}
-          index={editIndex}
+          index={editId}
           onSave={addApplication}
           onUpdate={updateApplication}
         />

@@ -24,9 +24,9 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Application } from "@/lib/application";
+import { Application } from "@/utils/localStorage";
 import { useState } from "react";
-import { applicationSchema } from "@/lib/application";
+import { ApplicationInput, applicationSchema } from "@/lib/application";
 import { toast } from "sonner";
 import { APPLICATION_STATUSES } from "@/constants/applicationStatus";
 
@@ -34,13 +34,15 @@ type NewApplicationModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   editApplication?: Application | null;
-  index?: number | null;
+  index?: string | null;
 
-  onSave: (application: Application) => void;
-  onUpdate: (index: number, application: Application) => void;
+  onSave: (application: ApplicationInput) => Promise<void>;
+  onUpdate: (id: string, application: ApplicationInput) => Promise<void>;
 };
 
-const getInitialState = (application?: Application | null): Application => ({
+const getInitialState = (
+  application?: Application | null,
+): ApplicationInput => ({
   CompanyName: application?.CompanyName || "",
   Role: application?.Role || "",
   DateApplied: application?.DateApplied || "",
@@ -61,22 +63,22 @@ const NewApplicationModal = ({
   onSave,
   onUpdate,
 }: NewApplicationModalProps) => {
-  const [formState, setFormState] = useState<Application>(() =>
+  const [formState, setFormState] = useState<ApplicationInput>(() =>
     getInitialState(editApplication),
   );
 
   // Per-field validation errors (keys match the Zod schema field names)
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const updateInput = <K extends keyof Application>(
+  const updateInput = <K extends keyof ApplicationInput>(
     field: K,
-    value: Application[K],
+    value: ApplicationInput[K],
   ) => {
-    setFormState((prev:Application) => ({ ...prev, [field]: value }));
+    setFormState((prev) => ({ ...prev, [field]: value }));
   };
 
   // Save application into LocalStorage
-  const saveApplication = () => {
+  const saveApplication = async () => {
     const validation = applicationSchema.safeParse(formState);
     if (!validation.success) {
       // Build a map of field name → first error message
@@ -95,26 +97,28 @@ const NewApplicationModal = ({
     // Clear any previous errors
     setErrors({});
 
-
-    if (editApplication && index !== null) {
-      onUpdate(index as number, validation.data);
-      toast.success("Application updated!");
-    } else {
-      onSave(validation.data);
-      toast.success("Application saved!");
+    try {
+      if (editApplication && index) {
+        await onUpdate(index, validation.data);
+        toast.success("Application updated!");
+      } else {
+        await onSave(validation.data);
+        toast.success("Application saved!");
+      }
+      // close modal after saving
+      onOpenChange(false);
+      setFormState(getInitialState(undefined));
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
     }
-    // close modal after saving
-    onOpenChange(false);
-    setFormState(getInitialState(undefined));
   };
   const handleOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
       setErrors({});
-       setFormState(getInitialState(undefined)); 
+      setFormState(getInitialState(undefined));
     }
     onOpenChange(isOpen);
   };
-
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -238,14 +242,24 @@ const NewApplicationModal = ({
                 value={formState.Status}
                 onValueChange={(value) => updateInput("Status", value)}
               >
-                <SelectTrigger className={`pl-10 ${inputStyles(!!errors.Status)}`}>
+                <SelectTrigger
+                  className={`pl-10 ${inputStyles(!!errors.Status)}`}
+                >
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={APPLICATION_STATUSES.APPLIED}>Applied</SelectItem>
-                  <SelectItem value={APPLICATION_STATUSES.INTERVIEW}>Interview</SelectItem>
-                  <SelectItem value={APPLICATION_STATUSES.OFFER}>Offer</SelectItem>
-                  <SelectItem value={APPLICATION_STATUSES.REJECTED}>Rejected</SelectItem>
+                  <SelectItem value={APPLICATION_STATUSES.APPLIED}>
+                    Applied
+                  </SelectItem>
+                  <SelectItem value={APPLICATION_STATUSES.INTERVIEW}>
+                    Interview
+                  </SelectItem>
+                  <SelectItem value={APPLICATION_STATUSES.OFFER}>
+                    Offer
+                  </SelectItem>
+                  <SelectItem value={APPLICATION_STATUSES.REJECTED}>
+                    Rejected
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -267,7 +281,7 @@ const NewApplicationModal = ({
               <Input
                 id="link"
                 type="text"
-                className={`pl-10 ${ inputStyles(!!errors.JobLink)}`}
+                className={`pl-10 ${inputStyles(!!errors.JobLink)}`}
                 placeholder="e.g. https://example.com/job..."
                 value={formState.JobLink}
                 onChange={(e) => updateInput("JobLink", e.target.value)}
@@ -289,7 +303,7 @@ const NewApplicationModal = ({
                 id="notes"
                 value={formState.Notes}
                 onChange={(e) => updateInput("Notes", e.target.value)}
-                className={`min-h-[120px] ${ inputStyles(!!errors.Notes)}`}
+                className={`min-h-[120px] ${inputStyles(!!errors.Notes)}`}
                 placeholder="Mention key requirements, interview stages, or personal thoughts..."
               />
             </div>

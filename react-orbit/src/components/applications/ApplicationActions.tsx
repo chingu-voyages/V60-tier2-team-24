@@ -16,10 +16,10 @@ function ApplicationActions({
   onEdit,
   onDelete,
 }: {
-  index: number;
+  index: string;
   application: Application;
-  onEdit: (application: Application, index: number) => void;
-  onDelete: (index: number) => void;
+  onEdit: (application: Application, id: string) => void;
+  onDelete: (id: string) => void;
 }) {
   return (
     <>

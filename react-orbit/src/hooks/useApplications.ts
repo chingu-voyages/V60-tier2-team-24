@@ -1,3 +1,4 @@
+import { ApplicationInput } from "@/lib/application";
 import { Application, LocalStorage } from "@/utils/localStorage";
 import { useEffect, useState } from "react";
 
@@ -6,51 +7,61 @@ export function useApplications() {
 
   useEffect(() => {
     const fetchApplications = async () => {
-    try {
-      const apps = await LocalStorage.getApplications();
-      setApplications(apps || []);
-    } catch (error) {
-      console.error("Failed to fetch applications:", error);
-    }
-  };
+      try {
+        const apps = await LocalStorage.getApplications();
+        console.log("Fetched apps:", apps);
+        setApplications(apps || []);
+      } catch (error) {
+        console.error("Failed to fetch applications:", error);
+      }
+    };
 
-  fetchApplications();
+    fetchApplications();
   }, []);
 
-  const addApplication = async (application: Application) => {
+  const addApplication = async (application: ApplicationInput) => {
     try {
-    const newApp = await LocalStorage.addApplication(application);
+      const newApp = await LocalStorage.addApplication(application);
+      console.log("Added app:", newApp);
 
-    // Update UI optimistically
-    setApplications((prev) => [...prev, newApp]);
-  } catch (error) {
-    console.error("Failed to add application:", error);
-  }
+      // Update UI optimistically
+      setApplications((prev) => [...prev, newApp]);
+    } catch (error) {
+      console.error("Failed to add application:", error);
+      throw error;
+    }
   };
 
-  const updateApplication = async (index: number, application: Partial<Application>) => {
+  const updateApplication = async (
+    id: string,
+    application: Partial<Application>,
+  ) => {
     try {
+      console.log("Updating ID:", id);
       const updatedApplications = await LocalStorage.updateApplication(
-      index,
-      application,
-    );
+        id,
+        application,
+      );
 
-    if (updatedApplications) {
-      setApplications(updatedApplications);
-    }
+      if (updatedApplications) {
+        setApplications(updatedApplications);
+      }
     } catch (error) {
-      console.error('Failed to update application:', error);
+      console.error("Failed to update application:", error);
+      throw error;
     }
   };
 
-  const removeApplication = async (index: number) => {
+  const removeApplication = async (id: string) => {
     try {
-      const updatedApplications = await LocalStorage.removeApplication(index);
-    if (updatedApplications) {
-      setApplications(updatedApplications);
-    }
+      console.log("Deleting ID:", id);
+      const updatedApplications = await LocalStorage.removeApplication(id);
+      if (updatedApplications) {
+        setApplications(updatedApplications);
+      }
     } catch (error) {
-      console.error('Failed to remove application:', error);
+      console.error("Failed to remove application:", error);
+      throw error;
     }
   };
 

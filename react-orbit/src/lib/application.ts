@@ -1,8 +1,10 @@
 import { APPLICATION_STATUSES } from "@/constants/applicationStatus";
 import { z } from "zod";
 
-
-const statusValues = Object.values(APPLICATION_STATUSES)as [string, ...string[] ];
+const statusValues = Object.values(APPLICATION_STATUSES) as [
+  string,
+  ...string[],
+];
 
 export const applicationSchema = z.object({
   CompanyName: z.string().min(1, "Company name is required"),
