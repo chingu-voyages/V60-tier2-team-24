@@ -1,50 +1,64 @@
-import { Application } from "@/lib/application";
-export type { Application };
+import { ApplicationInput } from "@/lib/application";
+export type Application = ApplicationInput & { id: string };
+import { addDoc, collection,deleteDoc,doc,getDocs, updateDoc } from "firebase/firestore";
+import { db } from "@/firebase";
 
-type LocalStorageSchema = {
-  applications: Application[]; // JSON stringified array of Application objects
-};
-
-// Created a Keys type that is a union of the keys of the localstorage schema.
-type Keys = keyof LocalStorageSchema;
+const COLLECTION_NAME = "applications";
 
 export const LocalStorage = {
-  get<K extends Keys>(key: K): LocalStorageSchema[K] | null {
-    const value = window.localStorage.getItem(key);
-    // if the value is not null, return it as the correct type, otherwise log an error and return null
-    if (value !== null) {
-      return JSON.parse(value) as LocalStorageSchema[K];
-    }
-    // if the value is null, log an error and return null
-    console.error(`no value found in localStorage for key: ${key}`);
-    return null;
+
+  async getApplications(): Promise<Application[]> {
+    const snapshot = await getDocs(collection(db, COLLECTION_NAME));
+
+    return snapshot.docs.map((doc) => {
+      const data = doc.data() as ApplicationInput;
+      console.log(doc.id);
+
+      return {
+        id: doc.id,
+        ...data,
+      }
+    })
   },
-  set<K extends Keys>(key: K, value: LocalStorageSchema[K]) {
-    window.localStorage.setItem(key, JSON.stringify(value));
+
+  async addApplication(application: Application) {
+    await addDoc(collection(db, COLLECTION_NAME), application);
+    return application;
   },
+
   // Update a specific application by index with partial changes
-  updateApplication(index: number, changes: Partial<Application>) {
-    const apps = this.get("applications") || [];
+
+  async updateApplication(index: number, changes: Partial<Application>) {
+    const apps = await this.getApplications();
+
     if (index < 0 || index >= apps.length) {
       console.error(`Invalid index: ${index}`);
       return;
     }
-    apps[index] = { ...apps[index], ...changes };
-    this.set("applications", apps);
-    return apps;
+
+    const appToUpdate = apps[index];
+    const docRef = doc(db, COLLECTION_NAME, appToUpdate.id);
+
+    await updateDoc(docRef, changes);
+
+    return this.getApplications();
   },
+  
   // Remove a specific application by index
-  removeApplication(index: number) {
-    const apps = this.get("applications") || [];
+
+  async removeApplication(index: number) {
+    const apps = await this.getApplications();
+
     if (index < 0 || index >= apps.length) {
       console.error(`Invalid index: ${index}`);
       return;
     }
-    apps.splice(index, 1);
-    this.set("applications", apps);
-    return apps;
-  },
-  clear() {
-    window.localStorage.clear();
+
+    const appToDelete = apps[index];
+    const docRef = doc(db, COLLECTION_NAME, appToDelete.id);
+
+    await deleteDoc(docRef);
+
+    return this.getApplications();
   },
 };

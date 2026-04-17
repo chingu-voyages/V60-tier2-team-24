@@ -18,4 +18,4 @@ export const applicationSchema = z.object({
   Notes: z.string().min(1, "Notes is required"),
 });
 
-export type Application = z.infer<typeof applicationSchema>;
+export type ApplicationInput = z.infer<typeof applicationSchema>;
