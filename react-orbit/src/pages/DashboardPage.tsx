@@ -1,10 +1,23 @@
 import { toast } from "sonner";
+import { useState } from "react";
+import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
+import StatsCard from "@/components/StatsCard";
 import NewApplicationModal from "@/components/modals/NewApplicationModal";
+import JobDetailsModal from "@/components/modals/JobDetailsModal";
+import { useApplications } from "@/hooks/useApplications";
+import { Application } from "@/utils/localStorage";
+import calculateMetrics from "@/utils/dashboardMetrics";
+import ApplicationCard from "@/components/applications/ApplicationCard";
+import EmptyState from "@/components/applications/EmptyState";
+import DeleteConfirmationModal from "@/components/applications/ConfirmDeleteModal";
 
 export function DashboardPage() {
   const [open, setOpen] = useState(false);
   const [removeOpen, setRemoveOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [selectedApplication, setSelectedApplication] =
+    useState<Application | null>(null);
   const [editApplication, setEditApplication] = useState<Application | null>(
     null,
   );
@@ -27,6 +40,12 @@ export function DashboardPage() {
     setEditIndex(index);
     setOpen(true);
   };
+
+  const handleView = (app: Application) => {
+    setSelectedApplication(app);
+    setDetailsOpen(true);
+  };
+
   const handleDelete = (index: number) => {
     setDeleteIndex(index);
     setRemoveOpen(true);
@@ -93,28 +112,38 @@ export function DashboardPage() {
       </div>
       <div className="flex justify-between">
         <h2 className="text-3xl font-bold mb-4">Recent Activity</h2>
-        <NavLink
+        <Link
           to="/applications"
           className="text-md text-[#1e40af] hover:underline mb-4"
         >
           View All Applications
-        </NavLink>
+        </Link>
       </div>
       <div className="grid gap-4">
         {recentApplications.length > 0 ? (
           recentApplications.map((app, index) => (
-            <ApplicationCard
+            <div
               key={app.CompanyName}
-              application={app}
-              index={index}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
+              className="cursor-pointer"
+              onClick={() => handleView(app)}
+            >
+              <ApplicationCard
+                application={app}
+                index={index}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            </div>
           ))
         ) : (
           <EmptyState />
         )}
       </div>
+      <JobDetailsModal
+        open={detailsOpen}
+        onOpenChange={setDetailsOpen}
+        application={selectedApplication}
+      />
       <DeleteConfirmationModal
         open={removeOpen}
         onOpenChange={handleRemoveOpenChange}

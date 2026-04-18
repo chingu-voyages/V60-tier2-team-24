@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import ApplicationList from "@/components/applications/ApplicationList";
 import NewApplicationModal from "@/components/modals/NewApplicationModal";
+import JobDetailsModal from "@/components/modals/JobDetailsModal";
 import DeleteConfirmationModal from "@/components/applications/ConfirmDeleteModal";
 
 import { useApplications } from "@/hooks/useApplications";
@@ -12,6 +13,9 @@ import { Application } from "@/utils/localStorage";
 export function ApplicationsPage() {
   const [open, setOpen] = useState(false);
   const [removeOpen, setRemoveOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [selectedApplication, setSelectedApplication] =
+    useState<Application | null>(null);
 
   const { applications, addApplication, updateApplication, removeApplication } =
     useApplications();
@@ -33,6 +37,11 @@ export function ApplicationsPage() {
     setEditApplication(app);
     setEditIndex(index);
     setOpen(true);
+  };
+
+  const handleView = (app: Application) => {
+    setSelectedApplication(app);
+    setDetailsOpen(true);
   };
 
   const handleDelete = (index: number) => {
@@ -88,6 +97,13 @@ export function ApplicationsPage() {
         applications={applications}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onView={handleView}
+      />
+
+      <JobDetailsModal
+        open={detailsOpen}
+        onOpenChange={setDetailsOpen}
+        application={selectedApplication}
       />
 
       <DeleteConfirmationModal
