@@ -12,6 +12,7 @@ import { Application } from "@/utils/localStorage";
 export function ApplicationsPage() {
   const [open, setOpen] = useState(false);
   const [removeOpen, setRemoveOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const { applications, addApplication, updateApplication, removeApplication } =
     useApplications();
@@ -41,16 +42,18 @@ export function ApplicationsPage() {
   };
 
   const handleRemoveConfirm = async () => {
-    if (deleteId !== null) {
-      try {
-        await removeApplication(deleteId);
-        toast.success("Application removed!");
-      } catch (error) {
-        toast.error("Failed to remove application.");
-      }
+    if (!deleteId) return;
+    setDeleteLoading(true);
+    try {
+      await removeApplication(deleteId);
+      toast.success("Application removed!");
+      setRemoveOpen(false);
+    } catch (error) {
+      toast.error("Failed to remove application.");
+    } finally {
+      setDeleteLoading(false);
+      setDeleteId(null);
     }
-    setDeleteId(null);
-    setRemoveOpen(false);
   };
 
   const handleRemoveOpenChange = (open: boolean) => {
@@ -100,6 +103,7 @@ export function ApplicationsPage() {
         open={removeOpen}
         onOpenChange={handleRemoveOpenChange}
         onConfirm={handleRemoveConfirm}
+        loading={deleteLoading}
       />
     </section>
   );

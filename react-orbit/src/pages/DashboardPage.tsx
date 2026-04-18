@@ -19,6 +19,7 @@ const DashboardPage = () => {
   );
   const [editId, setEditId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const { applications, addApplication, updateApplication, removeApplication } =
     useApplications();
   const { totalApplications, interviewRate, offerRate, rejectionRate } =
@@ -42,16 +43,18 @@ const DashboardPage = () => {
   };
 
   const handleRemoveConfirm = async () => {
-    if (deleteId !== null) {
-      try {
-        await removeApplication(deleteId);
-        toast.success("Application removed!");
-      } catch (error) {
-        toast.error("Failed to remove application.");
-      }
+    if (!deleteId) return;
+    setDeleteLoading(true);
+    try {
+      await removeApplication(deleteId);
+      toast.success("Application removed!");
+      setRemoveOpen(false);
+    } catch (error) {
+      toast.error("Failed to remove application.");
+    } finally {
+      setDeleteLoading(false);
+      setDeleteId(null);
     }
-    setDeleteId(null);
-    setRemoveOpen(false);
   };
 
   const handleRemoveOpenChange = (open: boolean) => {
@@ -134,6 +137,7 @@ const DashboardPage = () => {
         open={removeOpen}
         onOpenChange={handleRemoveOpenChange}
         onConfirm={handleRemoveConfirm}
+        loading={deleteLoading}
       />
     </div>
   );

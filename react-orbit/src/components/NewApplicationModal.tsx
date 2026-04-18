@@ -69,6 +69,7 @@ const NewApplicationModal = ({
 
   // Per-field validation errors (keys match the Zod schema field names)
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
 
   const updateInput = <K extends keyof ApplicationInput>(
     field: K,
@@ -96,6 +97,7 @@ const NewApplicationModal = ({
 
     // Clear any previous errors
     setErrors({});
+    setLoading(true);
 
     try {
       if (editApplication && index) {
@@ -110,6 +112,8 @@ const NewApplicationModal = ({
       setFormState(getInitialState(undefined));
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
   const handleOpenChange = (isOpen: boolean) => {
@@ -317,10 +321,15 @@ const NewApplicationModal = ({
             Cancel
           </Button>
           <Button
+            disabled={loading}
             className="bg-[#0040a1] hover:bg-[#003080] px-8 rounded-lg"
             onClick={saveApplication}
           >
-            {index !== null ? "Update Application" : "Save Application"}
+            {loading
+              ? "Saving..."
+              : index !== null
+                ? "Update Application"
+                : "Save Application"}
           </Button>
         </div>
       </DialogContent>
