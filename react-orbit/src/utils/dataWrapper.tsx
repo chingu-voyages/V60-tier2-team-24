@@ -12,7 +12,7 @@ import { db } from "@/firebase";
 
 const COLLECTION_NAME = "applications";
 
-export const LocalStorage = {
+export const dataWrapper = {
   async getApplications(): Promise<Application[]> {
     const snapshot = await getDocs(collection(db, COLLECTION_NAME));
 

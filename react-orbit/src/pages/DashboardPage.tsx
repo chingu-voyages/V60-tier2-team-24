@@ -4,7 +4,7 @@ import NewApplicationModal from "@/components/NewApplicationModal";
 import DeleteConfirmationModal from "@/components/applications/ConfirmDeleteModal";
 import StatsCard from "@/components/StatsCard";
 import { useState } from "react";
-import { Application } from "@/utils/localStorage";
+import { Application } from "@/utils/dataWrapper";
 import ApplicationCard from "@/components/applications/ApplicationCard";
 import EmptyState from "@/components/applications/EmptyState";
 import { NavLink } from "react-router";

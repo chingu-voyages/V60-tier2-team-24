@@ -1,4 +1,4 @@
-import { Application } from "@/utils/localStorage";
+import { Application } from "@/utils/dataWrapper";
 import EmptyState from "./EmptyState";
 import ApplicationCard from "./ApplicationCard";
 

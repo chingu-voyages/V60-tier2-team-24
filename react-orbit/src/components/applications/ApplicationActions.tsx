@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-import { Application } from "@/utils/localStorage";
+import { Application } from "@/utils/dataWrapper";
 
 function ApplicationActions({
   index,

@@ -1,5 +1,5 @@
 import { ApplicationInput } from "@/lib/application";
-import { Application, LocalStorage } from "@/utils/localStorage";
+import { Application, dataWrapper } from "@/utils/dataWrapper";
 import { useEffect, useState } from "react";
 
 export function useApplications() {
@@ -8,7 +8,7 @@ export function useApplications() {
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const apps = await LocalStorage.getApplications();
+        const apps = await dataWrapper.getApplications();
         console.log("Fetched apps:", apps);
         setApplications(apps || []);
       } catch (error) {
@@ -21,7 +21,7 @@ export function useApplications() {
 
   const addApplication = async (application: ApplicationInput) => {
     try {
-      const newApp = await LocalStorage.addApplication(application);
+      const newApp = await dataWrapper.addApplication(application);
       console.log("Added app:", newApp);
 
       // Update UI optimistically
@@ -38,7 +38,7 @@ export function useApplications() {
   ) => {
     try {
       console.log("Updating ID:", id);
-      const updatedApplications = await LocalStorage.updateApplication(
+      const updatedApplications = await dataWrapper.updateApplication(
         id,
         application,
       );
@@ -55,7 +55,7 @@ export function useApplications() {
   const removeApplication = async (id: string) => {
     try {
       console.log("Deleting ID:", id);
-      const updatedApplications = await LocalStorage.removeApplication(id);
+      const updatedApplications = await dataWrapper.removeApplication(id);
       if (updatedApplications) {
         setApplications(updatedApplications);
       }

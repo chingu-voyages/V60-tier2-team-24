@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Application } from "@/utils/localStorage";
+import { Application } from "@/utils/dataWrapper";
 import { useState } from "react";
 import { ApplicationInput, applicationSchema } from "@/lib/application";
 import { toast } from "sonner";
