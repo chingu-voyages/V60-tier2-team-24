@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import NewApplicationModal from "@/components/NewApplicationModal";
+import NewApplicationModal from "@/components/modals/NewApplicationModal";
 
 export function DashboardPage() {
   const [open, setOpen] = useState(false);

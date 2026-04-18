@@ -5,11 +5,11 @@ import ApplicationCard from "./ApplicationCard";
 function ApplicationList({
   applications,
   onEdit,
-  onDelete
+  onDelete,
 }: {
   applications: Application[];
   onEdit: (application: Application, index: number) => void;
-  onDelete: (index: number) => void
+  onDelete: (index: number) => void;
 }) {
   if (applications.length === 0) {
     return <EmptyState />;
