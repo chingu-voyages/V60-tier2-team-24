@@ -1,13 +1,5 @@
-// Setting up the data stored in the local storage
-export type Application = {
-  CompanyName: string;
-  Role: string;
-  DateApplied: string;
-  Location: string;
-  Status: string;
-  JobLink: string;
-  Notes: string;
-};
+import { Application } from "@/lib/application";
+export type { Application };
 
 type LocalStorageSchema = {
   applications: Application[]; // JSON stringified array of Application objects

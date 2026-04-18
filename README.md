@@ -40,5 +40,4 @@ coding!
 - Pooja Balachandran: [GitHub] https://github.com/PCoderHub / [LinkedIn] https://www.linkedin.com/in/poojapbalachandran/
 - Eduard: [GitHub] https://github.com/EduardDE7
 - Shivani Bhardwaj: [GitHub](https://github.com/shivanibhardwaj0911) / [LinkedIn](https://www.linkedin.com/in/shivanibdwj)
-
-- Teammate name #n: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
+- Anderson Osayerie: [GitHub](https://github.com/andemosa) / [LinkedIn](https://www.linkedin.com/in/anderson-osayerie/)
