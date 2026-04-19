@@ -72,7 +72,7 @@ const NewApplicationModal = ({
     field: K,
     value: Application[K],
   ) => {
-    setFormState((prev:Application) => ({ ...prev, [field]: value }));
+    setFormState((prev: Application) => ({ ...prev, [field]: value }));
   };
 
   // Save application into LocalStorage
@@ -95,7 +95,6 @@ const NewApplicationModal = ({
     // Clear any previous errors
     setErrors({});
 
-
     if (editApplication && index !== null) {
       onUpdate(index as number, validation.data);
       toast.success("Application updated!");
@@ -110,11 +109,10 @@ const NewApplicationModal = ({
   const handleOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
       setErrors({});
-       setFormState(getInitialState(undefined)); 
+      setFormState(getInitialState(undefined));
     }
     onOpenChange(isOpen);
   };
-
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -238,14 +236,24 @@ const NewApplicationModal = ({
                 value={formState.Status}
                 onValueChange={(value) => updateInput("Status", value)}
               >
-                <SelectTrigger className={`pl-10 ${inputStyles(!!errors.Status)}`}>
+                <SelectTrigger
+                  className={`pl-10 ${inputStyles(!!errors.Status)}`}
+                >
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={APPLICATION_STATUSES.APPLIED}>Applied</SelectItem>
-                  <SelectItem value={APPLICATION_STATUSES.INTERVIEW}>Interview</SelectItem>
-                  <SelectItem value={APPLICATION_STATUSES.OFFER}>Offer</SelectItem>
-                  <SelectItem value={APPLICATION_STATUSES.REJECTED}>Rejected</SelectItem>
+                  <SelectItem value={APPLICATION_STATUSES.APPLIED}>
+                    Applied
+                  </SelectItem>
+                  <SelectItem value={APPLICATION_STATUSES.INTERVIEW}>
+                    Interview
+                  </SelectItem>
+                  <SelectItem value={APPLICATION_STATUSES.OFFER}>
+                    Offer
+                  </SelectItem>
+                  <SelectItem value={APPLICATION_STATUSES.REJECTED}>
+                    Rejected
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -267,7 +275,7 @@ const NewApplicationModal = ({
               <Input
                 id="link"
                 type="text"
-                className={`pl-10 ${ inputStyles(!!errors.JobLink)}`}
+                className={`pl-10 ${inputStyles(!!errors.JobLink)}`}
                 placeholder="e.g. https://example.com/job..."
                 value={formState.JobLink}
                 onChange={(e) => updateInput("JobLink", e.target.value)}
@@ -289,7 +297,7 @@ const NewApplicationModal = ({
                 id="notes"
                 value={formState.Notes}
                 onChange={(e) => updateInput("Notes", e.target.value)}
-                className={`min-h-[120px] ${ inputStyles(!!errors.Notes)}`}
+                className={`min-h-[120px] ${inputStyles(!!errors.Notes)}`}
                 placeholder="Mention key requirements, interview stages, or personal thoughts..."
               />
             </div>
