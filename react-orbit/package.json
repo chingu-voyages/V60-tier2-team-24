@@ -35,7 +35,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npm run build && firebase deploy --only hosting"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
