@@ -10,7 +10,7 @@ import { Application } from "@/utils/localStorage";
 import calculateMetrics from "@/utils/dashboardMetrics";
 import ApplicationCard from "@/components/applications/ApplicationCard";
 import EmptyState from "@/components/applications/EmptyState";
-import DeleteConfirmationModal from "@/components/applications/ConfirmDeleteModal";
+import DeleteConfirmationModal from "@/components/modals/ConfirmDeleteModal";
 
 export function DashboardPage() {
   const [open, setOpen] = useState(false);
