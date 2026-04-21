@@ -11,7 +11,7 @@ const FILTER_STORAGE_KEY = "applications-status-filter";
 
 const getSavedStatuses = (): ApplicationStatus[] => {
   const savedStatuses = LocalStorage.get(FILTER_STORAGE_KEY);
-  if (!savedStatuses) return ALL_STATUSES;
+  if (!Array.isArray(savedStatuses)) return [];
 
   return savedStatuses.filter((status) => ALL_STATUSES.includes(status));
 };
@@ -33,15 +33,20 @@ export function useApplicationStatusFilter(applications: Application[]) {
     });
   };
 
-  const filteredApplications = useMemo(
-    () =>
-      applications
-        .map((application, index) => ({ application, index }))
-        .filter(({ application }) =>
-          selectedStatuses.includes(application.Status as ApplicationStatus),
-        ),
-    [applications, selectedStatuses],
-  );
+  const filteredApplications = useMemo(() => {
+    const indexedApplications = applications.map((application, index) => ({
+      application,
+      index,
+    }));
+
+    if (selectedStatuses.length === 0) {
+      return indexedApplications;
+    }
+
+    return indexedApplications.filter(({ application }) =>
+      selectedStatuses.includes(application.Status as ApplicationStatus),
+    );
+  }, [applications, selectedStatuses]);
 
   return {
     selectedStatuses,
