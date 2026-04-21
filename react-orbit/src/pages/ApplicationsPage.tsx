@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import ApplicationList from "@/components/applications/ApplicationList";
 import NewApplicationModal from "@/components/modals/NewApplicationModal";
 import JobDetailsModal from "@/components/modals/JobDetailsModal";
-import DeleteConfirmationModal from "@/components/applications/ConfirmDeleteModal";
+import DeleteConfirmationModal from "@/components/modals/ConfirmDeleteModal";
 import ApplicationsStatusFilter from "@/components/applications/ApplicationsStatusFilter";
 
 import { useApplications } from "@/hooks/useApplications";
