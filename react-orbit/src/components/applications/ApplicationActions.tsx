@@ -11,14 +11,14 @@ import {
 import { Application } from "@/utils/dataWrapper";
 
 function ApplicationActions({
-  index,
+  id,
   application,
   onEdit,
   onDelete,
 }: {
-  index: string;
+  id: string;
   application: Application;
-  onEdit: (application: Application, id: string) => void;
+  onEdit: (application: Application) => void;
   onDelete: (id: string) => void;
 }) {
   return (
@@ -38,7 +38,7 @@ function ApplicationActions({
             className="p-4"
             onClick={(e) => {
               e.stopPropagation();
-              onEdit(application, index);
+              onEdit(application);
             }}
           >
             <Pencil className="mr-2 text-gray-400" />
@@ -48,7 +48,7 @@ function ApplicationActions({
             className="p-4"
             onClick={(e) => {
               e.stopPropagation();
-              onDelete(index);
+              onDelete(id);
             }}
           >
             <Trash2 className="mr-2 text-red-500" />

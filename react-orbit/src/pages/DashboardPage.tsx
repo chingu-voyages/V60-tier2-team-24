@@ -24,8 +24,14 @@ export function DashboardPage() {
   const [editId, setEditId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const { applications, addApplication, updateApplication, removeApplication } =
-    useApplications();
+  const {
+    applications,
+    addApplication,
+    updateApplication,
+    removeApplication,
+    loading,
+    error,
+  } = useApplications();
   const { totalApplications, interviewRate, offerRate, rejectionRate } =
     calculateMetrics(applications);
   const recentApplications = applications.slice(-4).reverse(); // Get the 4 most recent applications
@@ -85,7 +91,7 @@ export function DashboardPage() {
         + Add Application
       </Button>
       <NewApplicationModal
-        key={editId !== null ? `edit-${editId}` : "new"} // temporary key until proper id
+        key={editId !== null ? `edit-${editId}` : "new"}
         open={open}
         onOpenChange={(val) => {
           setOpen(val);
@@ -96,7 +102,7 @@ export function DashboardPage() {
           }
         }}
         editApplication={editApplication}
-        index={editId}
+        id={editId}
         onSave={addApplication}
         onUpdate={updateApplication}
       />
@@ -129,16 +135,25 @@ export function DashboardPage() {
         </Link>
       </div>
       <div className="grid gap-4">
-        {recentApplications.length > 0 ? (
-          recentApplications.map((app, index) => (
+        {loading ? (
+          <p className="text-center text-gray-500 col-span-full">
+            Loading applications...
+          </p>
+        ) : error ? (
+          <div className="text-center col-span-full">
+            <p className="text-red-500 font-semibold">
+              Failed to load applications
+            </p>
+          </div>
+        ) : recentApplications.length > 0 ? (
+          recentApplications.map((app) => (
             <div
-              key={app.CompanyName}
+              key={app.id}
               className="cursor-pointer"
               onClick={() => handleView(app)}
             >
               <ApplicationCard
                 application={app}
-                index={index}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
               />

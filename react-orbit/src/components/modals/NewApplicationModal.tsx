@@ -34,7 +34,7 @@ type NewApplicationModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   editApplication?: Application | null;
-  index?: string | null;
+  id?: string | null;
 
   onSave: (application: ApplicationInput) => Promise<void>;
   onUpdate: (id: string, application: ApplicationInput) => Promise<void>;
@@ -59,7 +59,7 @@ const NewApplicationModal = ({
   open,
   onOpenChange,
   editApplication,
-  index,
+  id,
   onSave,
   onUpdate,
 }: NewApplicationModalProps) => {
@@ -75,10 +75,9 @@ const NewApplicationModal = ({
     field: K,
     value: ApplicationInput[K],
   ) => {
-    setFormState((prev: Application) => ({ ...prev, [field]: value }));
+    setFormState((prev: ApplicationInput) => ({ ...prev, [field]: value }));
   };
 
-  // Save application into LocalStorage
   const saveApplication = async () => {
     const validation = applicationSchema.safeParse(formState);
     if (!validation.success) {
@@ -100,8 +99,8 @@ const NewApplicationModal = ({
     setLoading(true);
 
     try {
-      if (editApplication && index) {
-        await onUpdate(index, validation.data);
+      if (editApplication && id) {
+        await onUpdate(id, validation.data);
         toast.success("Application updated!");
       } else {
         await onSave(validation.data);
@@ -129,7 +128,7 @@ const NewApplicationModal = ({
       <DialogContent className="max-w-[672px] min-h-[684px] overflow-y-auto sm:rounded-2xl">
         <DialogHeader>
           <DialogTitle>
-            {index !== null ? "Edit Application" : "Add New Application"}
+            {id ? "Edit Application" : "Add New Application"}
           </DialogTitle>
           <DialogDescription className="text-sm text-[#64748b]">
             Fill in the details of your latest career opportunity
@@ -327,7 +326,7 @@ const NewApplicationModal = ({
           >
             {loading
               ? "Saving..."
-              : index !== null
+              : id
                 ? "Update Application"
                 : "Save Application"}
           </Button>

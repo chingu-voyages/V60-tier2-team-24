@@ -6,13 +6,11 @@ import ApplicationActions from "./ApplicationActions";
 
 function ApplicationCard({
   application,
-  index,
   onEdit,
   onDelete,
 }: {
   application: Application;
-  index: string;
-  onEdit: (application: Application, id: string) => void;
+  onEdit: (application: Application) => void;
   onDelete: (id: string) => void;
 }) {
   const styles = getStatusStyles(application.Status);
@@ -46,7 +44,7 @@ function ApplicationCard({
             {application.Status.toUpperCase()}
           </span>
           <ApplicationActions
-            index={index}
+            id={application.id}
             application={application}
             onEdit={onEdit}
             onDelete={onDelete}

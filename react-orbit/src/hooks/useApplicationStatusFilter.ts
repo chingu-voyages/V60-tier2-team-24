@@ -4,7 +4,8 @@ import {
   APPLICATION_STATUSES,
   ApplicationStatus,
 } from "@/constants/applicationStatus";
-import { Application, LocalStorage } from "@/utils/localStorage";
+import { Application } from "@/utils/dataWrapper";
+import { LocalStorage } from "@/utils/localStorage";
 
 const ALL_STATUSES = Object.values(APPLICATION_STATUSES) as ApplicationStatus[];
 const FILTER_STORAGE_KEY = "applications-status-filter";
@@ -34,16 +35,11 @@ export function useApplicationStatusFilter(applications: Application[]) {
   };
 
   const filteredApplications = useMemo(() => {
-    const indexedApplications = applications.map((application, index) => ({
-      application,
-      index,
-    }));
-
     if (selectedStatuses.length === 0) {
-      return indexedApplications;
+      return applications;
     }
 
-    return indexedApplications.filter(({ application }) =>
+    return applications.filter((application) =>
       selectedStatuses.includes(application.Status as ApplicationStatus),
     );
   }, [applications, selectedStatuses]);

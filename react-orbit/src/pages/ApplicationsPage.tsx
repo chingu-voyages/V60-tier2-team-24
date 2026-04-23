@@ -20,15 +20,20 @@ export function ApplicationsPage() {
   const [selectedApplication, setSelectedApplication] =
     useState<Application | null>(null);
 
-  const { applications, addApplication, updateApplication, removeApplication } =
-    useApplications();
+  const {
+    applications,
+    addApplication,
+    updateApplication,
+    removeApplication,
+    loading,
+    error,
+  } = useApplications();
   const { selectedStatuses, filteredApplications, toggleStatus } =
     useApplicationStatusFilter(applications);
   const [editApplication, setEditApplication] = useState<Application | null>(
     null,
   );
 
-  // NOTE: index for update application - need to switch to proper id when backend implementation to avoid wrong renders
   const [editId, setEditId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
@@ -110,19 +115,31 @@ export function ApplicationsPage() {
             }
           }}
           editApplication={editApplication}
-          index={editId}
+          id={editId}
           onSave={addApplication}
           onUpdate={updateApplication}
         />
       </div>
 
-      <ApplicationList
-        applications={filteredApplications}
-        totalApplicationsCount={applications.length}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onView={handleView}
-      />
+      {loading ? (
+        <div className="text-center py-10 text-gray-500">
+          Loading applications...
+        </div>
+      ) : error ? (
+        <div className="text-center py-10">
+          <p className="text-red-500 font-semibold">
+            Failed to load applications
+          </p>
+        </div>
+      ) : (
+        <ApplicationList
+          applications={filteredApplications}
+          totalApplicationsCount={applications.length}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onView={handleView}
+        />
+      )}
 
       <JobDetailsModal
         open={detailsOpen}

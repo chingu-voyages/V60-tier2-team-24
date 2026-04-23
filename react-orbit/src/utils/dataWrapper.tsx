@@ -34,23 +34,19 @@ export const dataWrapper = {
     };
   },
 
-  // Update a specific application by index with partial changes
+  // Update a specific application by id with partial changes
 
-  async updateApplication(id: string, changes: Partial<Application>) {
+  async updateApplication(id: string, changes: Partial<ApplicationInput>) {
     const docRef = doc(db, COLLECTION_NAME, id);
 
     await updateDoc(docRef, changes);
-
-    return this.getApplications();
   },
 
-  // Remove a specific application by index
+  // Remove a specific application by id
 
   async removeApplication(id: string) {
     const docRef = doc(db, COLLECTION_NAME, id);
 
     await deleteDoc(docRef);
-
-    return this.getApplications();
   },
 };
