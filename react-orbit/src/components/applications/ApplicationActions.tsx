@@ -36,12 +36,21 @@ function ApplicationActions({
         >
           <DropdownMenuItem
             className="p-4"
-            onClick={() => onEdit(application, index)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(application, index);
+            }}
           >
             <Pencil className="mr-2 text-gray-400" />
             <span className="font-semibold text-sm">Edit Application</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="p-4" onClick={() => onDelete(index)}>
+          <DropdownMenuItem
+            className="p-4"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(index);
+            }}
+          >
             <Trash2 className="mr-2 text-red-500" />
             <span className="font-semibold text-sm text-red-500">
               Delete Application

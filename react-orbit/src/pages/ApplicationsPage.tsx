@@ -3,19 +3,27 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import ApplicationList from "@/components/applications/ApplicationList";
-import NewApplicationModal from "@/components/NewApplicationModal";
-import DeleteConfirmationModal from "@/components/applications/ConfirmDeleteModal";
+import NewApplicationModal from "@/components/modals/NewApplicationModal";
+import JobDetailsModal from "@/components/modals/JobDetailsModal";
+import DeleteConfirmationModal from "@/components/modals/ConfirmDeleteModal";
+import ApplicationsStatusFilter from "@/components/applications/ApplicationsStatusFilter";
 
 import { useApplications } from "@/hooks/useApplications";
 import { Application } from "@/utils/dataWrapper";
+import { useApplicationStatusFilter } from "@/hooks/useApplicationStatusFilter";
 
 export function ApplicationsPage() {
   const [open, setOpen] = useState(false);
   const [removeOpen, setRemoveOpen] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [selectedApplication, setSelectedApplication] =
+    useState<Application | null>(null);
 
   const { applications, addApplication, updateApplication, removeApplication } =
     useApplications();
+  const { selectedStatuses, filteredApplications, toggleStatus } =
+    useApplicationStatusFilter(applications);
   const [editApplication, setEditApplication] = useState<Application | null>(
     null,
   );
@@ -34,6 +42,11 @@ export function ApplicationsPage() {
     setEditApplication(app);
     setEditId(app.id);
     setOpen(true);
+  };
+
+  const handleView = (app: Application) => {
+    setSelectedApplication(app);
+    setDetailsOpen(true);
   };
 
   const handleDelete = (id: string) => {
@@ -63,19 +76,29 @@ export function ApplicationsPage() {
 
   return (
     <section className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight text-slate-900">
-          Applications
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 md:text-base">
-          Manage your career journey and track prospects
-        </p>
-        <Button
-          onClick={handleCreate}
-          className="bg-[#0040a1] hover:bg-[#003080] text-white"
-        >
-          + Add Application
-        </Button>
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+            Applications
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 md:text-base">
+            Manage your career journey and track prospects
+          </p>
+        </div>
+
+        <div className="flex items-center justify-between gap-3">
+          <Button
+            onClick={handleCreate}
+            className="bg-[#0040a1] hover:bg-[#003080] text-white"
+          >
+            + Add Application
+          </Button>
+          <ApplicationsStatusFilter
+            selectedStatuses={selectedStatuses}
+            onToggleStatus={toggleStatus}
+          />
+        </div>
+
         <NewApplicationModal
           key={editId !== null ? `edit-${editId}` : "new"}
           open={open}
@@ -94,9 +117,17 @@ export function ApplicationsPage() {
       </div>
 
       <ApplicationList
-        applications={applications}
+        applications={filteredApplications}
+        totalApplicationsCount={applications.length}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onView={handleView}
+      />
+
+      <JobDetailsModal
+        open={detailsOpen}
+        onOpenChange={setDetailsOpen}
+        application={selectedApplication}
       />
 
       <DeleteConfirmationModal

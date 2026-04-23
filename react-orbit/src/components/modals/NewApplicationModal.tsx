@@ -75,7 +75,7 @@ const NewApplicationModal = ({
     field: K,
     value: ApplicationInput[K],
   ) => {
-    setFormState((prev) => ({ ...prev, [field]: value }));
+    setFormState((prev: Application) => ({ ...prev, [field]: value }));
   };
 
   // Save application into LocalStorage
