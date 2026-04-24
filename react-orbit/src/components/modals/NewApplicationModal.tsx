@@ -116,7 +116,7 @@ const NewApplicationModal = ({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-[672px] min-h-[684px] overflow-y-auto sm:rounded-2xl">
+      <DialogContent className="max-w-[672px] overflow-y-auto sm:rounded-2xl">
         <DialogHeader>
           <DialogTitle>
             {index !== null ? "Edit Application" : "Add New Application"}
