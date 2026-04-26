@@ -11,6 +11,7 @@ import calculateMetrics from "@/utils/dashboardMetrics";
 import ApplicationCard from "@/components/applications/ApplicationCard";
 import EmptyState from "@/components/applications/EmptyState";
 import DeleteConfirmationModal from "@/components/applications/ConfirmDeleteModal";
+import { auth } from "@/lib/firebase";
 
 export function DashboardPage() {
   const [open, setOpen] = useState(false);
@@ -66,7 +67,7 @@ export function DashboardPage() {
   return (
     <div>
       <h1 className="text-4xl font-extrabold font-manrope mb-4">
-        Welcome back, Alex.
+        Welcome back,{auth.currentUser?.displayName}.
       </h1>
 
       <Button
