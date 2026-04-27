@@ -49,7 +49,7 @@ export function Sidebar() {
             <SidebarMenuButton
               asChild
               size="lg"
-              className="h-auto overflow-visible rounded-xl p-0 hover:bg-transparent group-data-[collapsible=icon]:!size-10 group-data-[collapsible=icon]:justify-center"
+              className="h-auto overflow-visible rounded-xl p-0 hover:bg-transparent group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:justify-center"
             >
               <NavLink
                 to="/"
@@ -97,7 +97,7 @@ export function Sidebar() {
                       "h-auto overflow-visible rounded-xl px-4 py-3 text-sm font-medium text-slate-500 transition-all duration-200",
                       "hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-900/50",
                       "data-[active=true]:cursor-default data-[active=true]:bg-white data-[active=true]:text-blue-700 data-[active=true]:shadow-sm data-[active=true]:shadow-blue-900/5 data-[active=true]:hover:translate-x-0 data-[active=true]:hover:bg-white data-[active=true]:hover:text-blue-700 dark:data-[active=true]:bg-slate-900 dark:data-[active=true]:text-blue-400 dark:data-[active=true]:hover:bg-slate-900 dark:data-[active=true]:hover:text-blue-400",
-                      "group-data-[collapsible=icon]:!size-11 group-data-[collapsible=icon]:!rounded-xl group-data-[collapsible=icon]:!p-0",
+                      "group-data-[collapsible=icon]:size-11! group-data-[collapsible=icon]:rounded-xl! group-data-[collapsible=icon]:p-0!",
                     )}
                   >
                     <NavLink
