@@ -6,7 +6,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Application } from "@/utils/localStorage";
+import { Application } from "@/utils/dataWrapper";
 import { getStatusStyles } from "@/utils/statusStyle";
 import { getTimeAgo } from "@/utils/date";
 import { cn } from "@/lib/utils";

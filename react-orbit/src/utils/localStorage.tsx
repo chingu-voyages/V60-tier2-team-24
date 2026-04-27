@@ -1,10 +1,6 @@
-import { Application } from "@/lib/application";
 import { ApplicationStatus } from "@/constants/applicationStatus";
 
-export type { Application };
-
 type LocalStorageSchema = {
-  applications: Application[]; // JSON stringified array of Application objects
   "applications-status-filter": ApplicationStatus[];
   sidebar_state: boolean;
 };
@@ -27,28 +23,7 @@ export const LocalStorage = {
   set<K extends Keys>(key: K, value: LocalStorageSchema[K]) {
     window.localStorage.setItem(key, JSON.stringify(value));
   },
-  // Update a specific application by index with partial changes
-  updateApplication(index: number, changes: Partial<Application>) {
-    const apps = this.get("applications") || [];
-    if (index < 0 || index >= apps.length) {
-      console.error(`Invalid index: ${index}`);
-      return;
-    }
-    apps[index] = { ...apps[index], ...changes };
-    this.set("applications", apps);
-    return apps;
-  },
-  // Remove a specific application by index
-  removeApplication(index: number) {
-    const apps = this.get("applications") || [];
-    if (index < 0 || index >= apps.length) {
-      console.error(`Invalid index: ${index}`);
-      return;
-    }
-    apps.splice(index, 1);
-    this.set("applications", apps);
-    return apps;
-  },
+
   clear() {
     window.localStorage.clear();
   },

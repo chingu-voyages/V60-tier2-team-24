@@ -24,9 +24,9 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Application } from "@/lib/application";
+import { Application } from "@/utils/dataWrapper";
 import { useState } from "react";
-import { applicationSchema } from "@/lib/application";
+import { ApplicationInput, applicationSchema } from "@/lib/application";
 import { toast } from "sonner";
 import { APPLICATION_STATUSES } from "@/constants/applicationStatus";
 
@@ -34,13 +34,15 @@ type NewApplicationModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   editApplication?: Application | null;
-  index?: number | null;
+  id?: string | null;
 
-  onSave: (application: Application) => void;
-  onUpdate: (index: number, application: Application) => void;
+  onSave: (application: ApplicationInput) => Promise<void>;
+  onUpdate: (id: string, application: ApplicationInput) => Promise<void>;
 };
 
-const getInitialState = (application?: Application | null): Application => ({
+const getInitialState = (
+  application?: Application | null,
+): ApplicationInput => ({
   CompanyName: application?.CompanyName || "",
   Role: application?.Role || "",
   DateApplied: application?.DateApplied || "",
@@ -57,26 +59,26 @@ const NewApplicationModal = ({
   open,
   onOpenChange,
   editApplication,
-  index,
+  id,
   onSave,
   onUpdate,
 }: NewApplicationModalProps) => {
-  const [formState, setFormState] = useState<Application>(() =>
+  const [formState, setFormState] = useState<ApplicationInput>(() =>
     getInitialState(editApplication),
   );
 
   // Per-field validation errors (keys match the Zod schema field names)
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
 
-  const updateInput = <K extends keyof Application>(
+  const updateInput = <K extends keyof ApplicationInput>(
     field: K,
-    value: Application[K],
+    value: ApplicationInput[K],
   ) => {
-    setFormState((prev: Application) => ({ ...prev, [field]: value }));
+    setFormState((prev: ApplicationInput) => ({ ...prev, [field]: value }));
   };
 
-  // Save application into LocalStorage
-  const saveApplication = () => {
+  const saveApplication = async () => {
     const validation = applicationSchema.safeParse(formState);
     if (!validation.success) {
       // Build a map of field name → first error message
@@ -94,17 +96,24 @@ const NewApplicationModal = ({
 
     // Clear any previous errors
     setErrors({});
+    setLoading(true);
 
-    if (editApplication && index !== null) {
-      onUpdate(index as number, validation.data);
-      toast.success("Application updated!");
-    } else {
-      onSave(validation.data);
-      toast.success("Application saved!");
+    try {
+      if (editApplication && id) {
+        await onUpdate(id, validation.data);
+        toast.success("Application updated!");
+      } else {
+        await onSave(validation.data);
+        toast.success("Application saved!");
+      }
+      // close modal after saving
+      onOpenChange(false);
+      setFormState(getInitialState(undefined));
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    // close modal after saving
-    onOpenChange(false);
-    setFormState(getInitialState(undefined));
   };
   const handleOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
@@ -119,7 +128,7 @@ const NewApplicationModal = ({
       <DialogContent className="max-w-[672px] min-h-[684px] overflow-y-auto sm:rounded-2xl">
         <DialogHeader>
           <DialogTitle>
-            {index !== null ? "Edit Application" : "Add New Application"}
+            {id ? "Edit Application" : "Add New Application"}
           </DialogTitle>
           <DialogDescription className="text-sm text-[#64748b]">
             Fill in the details of your latest career opportunity
@@ -311,10 +320,15 @@ const NewApplicationModal = ({
             Cancel
           </Button>
           <Button
+            disabled={loading}
             className="bg-[#0040a1] hover:bg-[#003080] px-8 rounded-lg"
             onClick={saveApplication}
           >
-            {index !== null ? "Update Application" : "Save Application"}
+            {loading
+              ? "Saving..."
+              : id
+                ? "Update Application"
+                : "Save Application"}
           </Button>
         </div>
       </DialogContent>

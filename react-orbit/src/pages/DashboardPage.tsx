@@ -6,7 +6,7 @@ import StatsCard from "@/components/StatsCard";
 import NewApplicationModal from "@/components/modals/NewApplicationModal";
 import JobDetailsModal from "@/components/modals/JobDetailsModal";
 import { useApplications } from "@/hooks/useApplications";
-import { Application } from "@/utils/localStorage";
+import { Application } from "@/utils/dataWrapper";
 import calculateMetrics from "@/utils/dashboardMetrics";
 import ApplicationCard from "@/components/applications/ApplicationCard";
 import EmptyState from "@/components/applications/EmptyState";
@@ -21,23 +21,30 @@ export function DashboardPage() {
   const [editApplication, setEditApplication] = useState<Application | null>(
     null,
   );
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
-  const { applications, addApplication, updateApplication, removeApplication } =
-    useApplications();
+  const [editId, setEditId] = useState<string | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const {
+    applications,
+    addApplication,
+    updateApplication,
+    removeApplication,
+    loading,
+    error,
+  } = useApplications();
   const { totalApplications, interviewRate, offerRate, rejectionRate } =
     calculateMetrics(applications);
   const recentApplications = applications.slice(-4).reverse(); // Get the 4 most recent applications
 
   const handleCreate = () => {
     setEditApplication(null);
-    setEditIndex(null);
+    setEditId(null);
     setOpen(true);
   };
 
-  const handleEdit = (app: Application, index: number) => {
+  const handleEdit = (app: Application) => {
     setEditApplication(app);
-    setEditIndex(index);
+    setEditId(app.id);
     setOpen(true);
   };
 
@@ -46,21 +53,29 @@ export function DashboardPage() {
     setDetailsOpen(true);
   };
 
-  const handleDelete = (index: number) => {
-    setDeleteIndex(index);
+  const handleDelete = (id: string) => {
+    setDeleteId(id);
     setRemoveOpen(true);
   };
 
-  const handleRemoveConfirm = () => {
-    if (deleteIndex !== null) removeApplication(deleteIndex);
-    setDeleteIndex(null);
-    setRemoveOpen(false);
-    toast.success("Application removed!");
+  const handleRemoveConfirm = async () => {
+    if (!deleteId) return;
+    setDeleteLoading(true);
+    try {
+      await removeApplication(deleteId);
+      toast.success("Application removed!");
+      setRemoveOpen(false);
+    } catch (error) {
+      toast.error("Failed to remove application.");
+    } finally {
+      setDeleteLoading(false);
+      setDeleteId(null);
+    }
   };
 
   const handleRemoveOpenChange = (open: boolean) => {
     setRemoveOpen(open);
-    if (!open) setDeleteIndex(null);
+    if (!open) setDeleteId(null);
   };
 
   return (
@@ -76,18 +91,18 @@ export function DashboardPage() {
         + Add Application
       </Button>
       <NewApplicationModal
-        key={editIndex !== null ? `edit-${editIndex}` : "new"} // temporary key until proper id
+        key={editId !== null ? `edit-${editId}` : "new"}
         open={open}
         onOpenChange={(val) => {
           setOpen(val);
 
           if (!val) {
             setEditApplication(null);
-            setEditIndex(null);
+            setEditId(null);
           }
         }}
         editApplication={editApplication}
-        index={editIndex}
+        id={editId}
         onSave={addApplication}
         onUpdate={updateApplication}
       />
@@ -120,16 +135,25 @@ export function DashboardPage() {
         </Link>
       </div>
       <div className="grid gap-4">
-        {recentApplications.length > 0 ? (
-          recentApplications.map((app, index) => (
+        {loading ? (
+          <p className="text-center text-gray-500 col-span-full">
+            Loading applications...
+          </p>
+        ) : error ? (
+          <div className="text-center col-span-full">
+            <p className="text-red-500 font-semibold">
+              Failed to load applications
+            </p>
+          </div>
+        ) : recentApplications.length > 0 ? (
+          recentApplications.map((app) => (
             <div
-              key={app.CompanyName}
+              key={app.id}
               className="cursor-pointer"
               onClick={() => handleView(app)}
             >
               <ApplicationCard
                 application={app}
-                index={index}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
               />
@@ -148,6 +172,7 @@ export function DashboardPage() {
         open={removeOpen}
         onOpenChange={handleRemoveOpenChange}
         onConfirm={handleRemoveConfirm}
+        loading={deleteLoading}
       />
     </div>
   );
