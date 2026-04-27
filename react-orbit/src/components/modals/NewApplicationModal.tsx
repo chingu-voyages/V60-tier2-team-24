@@ -125,8 +125,8 @@ const NewApplicationModal = ({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-[672px] min-h-[684px] overflow-y-auto sm:rounded-2xl">
-        <DialogHeader>
+      <DialogContent className="max-w-[672px] max-h-[684px] overflow-y-auto sm:rounded-2xl">
+        <DialogHeader className="flex-shrink-0">
           <DialogTitle>
             {id ? "Edit Application" : "Add New Application"}
           </DialogTitle>
@@ -134,6 +134,7 @@ const NewApplicationModal = ({
             Fill in the details of your latest career opportunity
           </DialogDescription>
         </DialogHeader>
+      <div className="flex-1 overflow-y-auto px-1">
         <div className="grid grid-cols-2 gap-6">
           <div>
             <Label
@@ -315,7 +316,8 @@ const NewApplicationModal = ({
             )}
           </div>
         </div>
-        <div className="flex gap-3 p-4 justify-end">
+      </div>
+        <div className="flex gap-3 p-4 justify-end flex-shrink-0 border-t mt-2">
           <Button variant="ghost" onClick={() => handleOpenChange(false)}>
             Cancel
           </Button>

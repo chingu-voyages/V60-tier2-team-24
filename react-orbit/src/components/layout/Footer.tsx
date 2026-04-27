@@ -4,24 +4,22 @@ import { useState } from "react"
 const teamMembers = [
     {name: "Shivani Bhardwaj",github: "https://github.com/shivanibhardwaj0911" },
     {name: "Jose Cruz", github: "https://github.com/Cruz3196"},
-    {name: "Ruth Igwe-Oruta",github: "https://github.com/RuthIgwe-Oruta"},
+    {name: "Ruth Igwe-Oruta",github: "https://github.com/Xondacc"},
     {name: "Sasikumar",github: "https://github.com/vel-sk98"},
     { name: "Pooja Balachandran", github: "https://github.com/PCoderHub" },
     {name: "Eduard",github: "https://github.com/EduardDE7" }
 ]
 
 export const Footer = () => {
-    const [show, setShow] = useState(false);
   return (
       <div>
-          <footer className="bg-[#f8fafc] text-center p-4 mt-8 border-t">
+          <footer className="bg-[#f8fafc] text-center p-4">
               <h1 className="text-lg font-semibold font-manrope text-[#1E40AF] mb-2">
                 Orbit
               </h1>
-              <button onClick={() => setShow(!show)} className="text-md  hover:text-[#1E40AF] mb-4">
+              <a href="https://github.com/chingu-voyages/V60-tier2-team-24" className="text-md  hover:text-[#1E40AF] mb-4">
                 View Team Github repository
-              </button>
-              {show && 
+              </a> 
                   <div className="mt-1 flex flex-col items-center">
                       <span className="mb-2 text-[10px] font-medium uppercase tracking-[1px] text-[#cbd5e1]">
                           Team Members:
@@ -40,7 +38,6 @@ export const Footer = () => {
                       ))}
                     </div>      
                   </div>
-              }
               <p className="text-[#424654] pt-1">
                 © {new Date().getFullYear()} Orbit. All rights reserved.
               </p>
