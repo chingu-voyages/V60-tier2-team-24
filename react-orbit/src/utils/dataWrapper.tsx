@@ -8,7 +8,7 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "@/firebase";
+import { db } from "@/lib/firebase";
 
 const COLLECTION_NAME = "applications";
 

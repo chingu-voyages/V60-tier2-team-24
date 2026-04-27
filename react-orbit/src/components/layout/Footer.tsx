@@ -28,7 +28,7 @@ export const Footer = () => {
           <span className="mb-2 text-[10px] font-medium uppercase tracking-[1px] text-[#cbd5e1]">
             Team Members:
           </span>
-          <div className="max-h-28 overflow-y-auto scrollbar-hide">
+          <div className="overflow-y-auto scrollbar-hide">
             {teamMembers.map((member, index) => (
               <a
                 key={index}
@@ -42,9 +42,6 @@ export const Footer = () => {
             ))}
           </div>
         </div>
-        <p className="text-[#424654] pt-1">
-          © {new Date().getFullYear()} Orbit. All rights reserved.
-        </p>
         <p className="text-[#424654] pt-1">
           © {new Date().getFullYear()} Orbit. All rights reserved.
         </p>

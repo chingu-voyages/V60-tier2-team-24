@@ -25,12 +25,14 @@ type JobDetailsModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   application: Application | null;
+  onEdit: (application: Application) => void;
 };
 
 const JobDetailsModal = ({
   open,
   onOpenChange,
   application,
+  onEdit,
 }: JobDetailsModalProps) => {
   if (!application) return null;
 
@@ -38,7 +40,7 @@ const JobDetailsModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] max-w-[480px] max-h-[85vh] overflow-y-auto p-5 gap-0 rounded-xl">
+      <DialogContent className="w-[95vw] max-w-120 max-h-[85vh] overflow-y-auto p-5 gap-0 rounded-xl">
         <DialogHeader className="pb-3 border-b border-gray-100 mb-4">
           <div className="flex flex-wrap items-center gap-2">
             <DialogTitle className="text-base font-extrabold">
@@ -116,7 +118,7 @@ const JobDetailsModal = ({
 
           <div className="relative ml-0 pl-5 space-y-5 py-2 sm:py-2">
             <div className="relative">
-              <CheckCircle2 className="absolute -left-[21px] top-0 h-5 w-5 text-blue-800 bg-white rounded-full" />
+              <CheckCircle2 className="absolute -left-5.25 top-0 h-5 w-5 text-blue-800 bg-white rounded-full" />
               <div className="pl-3">
                 <p className="text-sm font-semibold">Applied</p>
                 <p className="text-xs text-muted-foreground">
@@ -135,7 +137,7 @@ const JobDetailsModal = ({
             {application.Status.toLowerCase() !== "applied" && (
               <>
                 <div className="relative pt-4">
-                  <CircleDot className="absolute -left-[21px] top-4 h-5 w-5 text-blue-800 bg-white rounded-full" />
+                  <CircleDot className="absolute -left-5.25 top-4 h-5 w-5 text-blue-800 bg-white rounded-full" />
                   <div className="pl-3">
                     <p className="text-sm font-semibold text-blue-800">
                       {application.Status.charAt(0).toUpperCase() +
@@ -169,7 +171,10 @@ const JobDetailsModal = ({
           >
             Close
           </Button>
-          <Button className="bg-blue-700 hover:bg-blue-800 text-white rounded-full px-6 w-auto">
+          <Button
+            className="bg-blue-700 hover:bg-blue-800 text-white rounded-full px-6 w-auto"
+            onClick={() => onEdit(application)}
+          >
             Edit Application
           </Button>
         </DialogFooter>

@@ -30,7 +30,7 @@ export const router = createBrowserRouter([
         element: <ResetPasswordPage />,
       },
       {
-        path: "/register",
+        path: "register",
         element: <RegisterPage />,
       },
     ],

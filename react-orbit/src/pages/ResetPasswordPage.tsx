@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
 import orbitLogo from "@/assets/orbit-logo.svg";
-import { auth } from "@/firebase";
+import { auth } from "@/lib/firebase";
 import { resetPasswordSchema } from "@/lib/resetPasswordSchema";
 
 const ResetPasswordPage = () => {

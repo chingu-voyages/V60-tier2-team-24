@@ -9,9 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
-import orbitLogo from "@/assets/orbit-logo.svg";
-import { auth, googleProvider } from "@/firebase";
+import { auth, googleProvider } from "@/lib/firebase";
 import { LoginFormData, loginSchema } from "@/lib/loginSchema";
+import { getFirebaseErrorMessage } from "@/utils/firebaseErrors";
+
+import orbitLogo from "@/assets/orbit-logo.svg";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -83,8 +85,9 @@ const LoginForm = () => {
     try {
       await signInWithPopup(auth, googleProvider);
       navigate("/");
-    } catch (error: unknown) {
-      toast.error("Google sign-in failed. Please try again.");
+    } catch (error: any) {
+      const message = getFirebaseErrorMessage(error.code);
+      if (message) toast.error(message);
     } finally {
       setGoogleLoading(false);
     }
@@ -172,7 +175,7 @@ const LoginForm = () => {
           <Button
             type="submit"
             disabled={googleLoading || loading}
-            className="w-full text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 bg-[linear-gradient(135deg,#0040a1_0%,#0056d2_100%)] hover:opacity-90 transition shadow-md shadow-blue-900/20"
+            className="w-full text-white font-medium py-3 rounded-xl flex items-center justify-center gap-2 bg-[linear-gradient(135deg,#0040a1_0%,#0056d2_100%)] hover:opacity-90 transition shadow-md shadow-blue-900/20 cursor-pointer"
           >
             {loading ? "Loading..." : "Access Workspace"}
             {!loading && <ArrowRight size={16} />}
@@ -191,7 +194,7 @@ const LoginForm = () => {
             type="button"
             onClick={handleGoogleSignIn}
             disabled={googleLoading || loading}
-            className="w-full py-3 rounded-lg font-medium text-base border-[#c3c6d6]/50 shadow-sm"
+            className="w-full py-3 rounded-lg font-medium text-base border-[#c3c6d6]/50 shadow-sm cursor-pointer"
           >
             <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
               <path
@@ -217,7 +220,7 @@ const LoginForm = () => {
 
         <p className="text-sm text-center text-gray-500 mt-6">
           Don&apos;t have an account?&nbsp;
-          <Link to="/auth/signup" className="text-[#0056d2] font-medium">
+          <Link to="/auth/register" className="text-[#0056d2] font-medium">
             Create one
           </Link>
         </p>
