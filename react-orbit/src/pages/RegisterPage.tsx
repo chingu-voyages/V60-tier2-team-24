@@ -1,0 +1,201 @@
+import { Footer } from "@/components/layout/Footer";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {EyeIcon, EyeOff, Globe} from "lucide-react"
+import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { RegisterFormData, registerSchema } from "@/lib/registerSchema";
+import { createUserWithEmailAndPassword, signInWithPopup, updateProfile } from "firebase/auth";
+import { auth, googleProvider } from "@/lib/firebase";
+import { toast } from "sonner";
+import { getFirebaseErrorMessage } from "@/utils/firebaseErrors";
+
+
+export const RegisterPage = () => {
+    const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
+    const [formValues, setFormValues] = useState<RegisterFormData>({
+        fullName: "",
+        email: "",
+        password: ""
+    });
+    const [errors, setErrors] = useState<Record<string, string>>({});
+    const [loading, setLoading] = useState(false);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormValues((prev) => ({ ...prev, [name]: value }));
+
+        //Clear error for this fields
+        if (errors[name]) {
+            setErrors((prev) => {
+                const updated = { ...prev };
+                delete updated[name];
+                return updated
+            })
+        }
+
+    };
+
+    const handleSubmit = async () => {
+        const validation = registerSchema.safeParse(formValues);
+        if (!validation.success) {
+            const fieldErrors: Record<string, string> = {};
+            for (const issue of validation.error.issues) {
+                const key = issue.path[0] as string;
+                if (!fieldErrors[key]) {
+                    fieldErrors[key] = issue.message;
+                }
+            }
+            setErrors(fieldErrors);
+            return;
+        }
+
+        setErrors({});
+        setLoading(true);
+        try {
+            const userCredential = await createUserWithEmailAndPassword(
+                auth,
+                validation.data.email,
+                validation.data.password
+            );
+
+            //Set the display name
+            await updateProfile(userCredential.user, {
+                displayName: validation.data.fullName,
+            });
+
+            toast.success("Account created successfully");
+            navigate("/");
+        } catch (error: any) {
+            const message = getFirebaseErrorMessage(error.code);
+
+            if (message) {
+                if (error.code === "auth/email-already-in-use" || error.code === "auth/invalid-email") {
+                    setErrors({ email: message });
+                } else if (error.code === "auth/weak-password") {
+                    setErrors({ password: message });
+                } else {
+                    toast.error(message);
+                }
+            }    
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    const handleGoogleSignIn = async () => {
+        setLoading(true);
+        try {
+            await signInWithPopup(auth, googleProvider);
+            toast.success("Signed in with Google!");
+            navigate("/");
+        } catch (error: any) {
+            console.log("Google error:", error.code, error.message);
+            const message = getFirebaseErrorMessage(error.code);
+            if (message) toast.error(message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const inputStyles = (hasError: boolean) =>
+        `bg-[#f2f4f6] rounded-lg p-2 mt-2 border-0 placeholder:text-[#94a3b8] ${hasError ? "border-2 border-red-500" : ""}`;
+
+    return (
+        <div className="min-h-screen bg-[#f7f9fb] flex flex-col">
+            <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden px-4 py-12">
+                {/* Decorative blurs */}
+                <div className="absolute -top-32 -right-16 w-[512px] h-[512px] bg-[#0040a1]/5 rounded-full blur-[60px]" />
+                <div className="absolute -bottom-16 -left-16 w-[384px] h-[384px] bg-[#006c49]/5 rounded-full blur-[50px]" />
+                <div className="flex flex-col items-center mb-4">
+                    <div className="bg-white rounded-full p-2 shadow-lg mb-4">
+                        <Globe className="h-8 w-8 text-[#0040a1]" />
+                    </div>
+                    <h2 className="text-3xl font-extrabold font-manrope text-[#0040a1] tracking-tight mb-2">Orbit</h2>
+                </div>
+                <div className="bg-white max-w-[448px] w-full overflow-y-auto p-6 sm:p-12 rounded-xl shadow-[0px_32px_48px_-4px_rgba(25,28,30,0.06)] relative z-10 mb-10">
+                    <h2 className="text-3xl font-extrabold font-manrope text-center text-[#191c1e]">Create an account</h2>
+                    <p className="text-base text-center text-[#424654] mt-2"> Begin your curated career journey today</p>
+                    <div className="mt-6 space-y-4">
+                        <div>
+                            <Label htmlFor="fullName" className="text-sm font-semibold text-[#424654]">Full Name</Label>
+                            <Input type="text"
+                                id="fullName"
+                                name="fullName"
+                                placeholder="Alex Marcer"
+                                value={formValues.fullName}
+                                onChange={handleChange}
+                                className={`w-full ${inputStyles(!!errors.fullName)}`} />
+                            {errors.fullName && (
+                                <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>
+                            )}
+                        </div>
+                        <div>
+                            <Label htmlFor="email" className="text-sm font-semibold text-[#424654]">Email</Label>
+                            <Input type="email"
+                                id="email"
+                                name="email"
+                                placeholder="alex@example.com"
+                                value={formValues.email}
+                                onChange={handleChange}
+                                className={`w-full ${inputStyles(!!errors.email)}`} />
+                            {errors.email && (
+                                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                            )}
+                        </div>
+                        <div>
+                            <Label htmlFor="password" className="text-sm font-semibold text-[#424654]">Password</Label>
+                            <div className="relative">
+                                <Input type={showPassword ? "text" : "password"}
+                                    id="password"
+                                    name="password"
+                                    placeholder="Min 8 characters"
+                                    value={formValues.password}
+                                    onChange={handleChange}
+                                    className={`w-full ${inputStyles(!!errors.password)}`} />
+                                <button type="button"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94a3b8] hover:text-[#424654]"
+                                    onClick={() => setShowPassword(!showPassword)}>
+                                    {showPassword ? <EyeOff className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+                                </button>
+                            </div>
+                            {errors.password && (
+                                <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                            )}
+                        </div>
+                      
+                        <Button onClick={handleSubmit}
+                            disabled={loading}
+                            className="w-full mt-4 rounded-lg text-white font-bold font-manrope text-base shadow-md disabled:opacity-50"
+                            style={{ background: "linear-gradient(171deg, #0040a1 0%, #0056d2 100%)" }}>
+                            {loading ? "Creating account..." : "Create Account"}
+                        </Button>
+                        <div className="flex items-center gap-4 my-4">
+                            <div className="flex-1 h-px bg-[#c3c6d6]/30" />
+                            <span className="text-xs font-semibold uppercase tracking-widest text-[#424654]">OR</span>
+                            <div className="flex-1 h-px bg-[#c3c6d6]/30" />
+                        </div>
+                        <Button
+                            variant="outline"
+                            onClick={handleGoogleSignIn}
+                            disabled={loading}
+                            className="w-full py-4 mt-2 rounded-lg font-bold font-manrope text-base border-[#c3c6d6]/50 shadow-sm disabled:opacity-50">
+                            <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
+                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                            </svg>
+                            Continue with Google
+                        </Button>
+                        <p className="text-sm text-center text-slate-600 mt-4">Already have an account?{" "}
+                            <Link to="/login" className="text-[#0040a1] font-semibold hover:underline">Log in</Link></p>
+                    </div>
+                </div>
+            </div>
+            <Footer />
+        </div>
+    );
+};

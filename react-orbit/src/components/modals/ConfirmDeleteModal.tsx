@@ -6,15 +6,16 @@ import { Button } from "@/components/ui/button";
 type DeleteConfirmationModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm: () => void
+  onConfirm: () => void;
+  loading?: boolean;
 };
 
 export default function DeleteConfirmationModal({
   open,
   onOpenChange,
-  onConfirm
+  onConfirm,
+  loading,
 }: DeleteConfirmationModalProps) {
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-sm text-center p-6 rounded-3xl">
@@ -44,8 +45,9 @@ export default function DeleteConfirmationModal({
             variant="destructive"
             className="w-full rounded-xl py-5 font-semibold"
             onClick={onConfirm}
+            disabled={loading}
           >
-            Delete
+            {loading ? "Deleting..." : "Delete"}
           </Button>
         </div>
       </DialogContent>

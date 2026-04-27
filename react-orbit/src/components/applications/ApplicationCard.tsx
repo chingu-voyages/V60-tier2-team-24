@@ -1,19 +1,17 @@
 import { getTimeAgo } from "@/utils/date";
-import { Application } from "@/lib/application";
+import { Application } from "@/utils/dataWrapper";
 import { getStatusStyles } from "@/utils/statusStyle";
 import { cn } from "@/lib/utils";
 import ApplicationActions from "./ApplicationActions";
 
 function ApplicationCard({
   application,
-  index,
   onEdit,
-  onDelete
+  onDelete,
 }: {
   application: Application;
-  index: number;
-  onEdit: (application: Application, index: number) => void;
-  onDelete: (index: number) => void;
+  onEdit: (application: Application) => void;
+  onDelete: (id: string) => void;
 }) {
   const styles = getStatusStyles(application.Status);
 
@@ -46,7 +44,7 @@ function ApplicationCard({
             {application.Status.toUpperCase()}
           </span>
           <ApplicationActions
-            index={index}
+            id={application.id}
             application={application}
             onEdit={onEdit}
             onDelete={onDelete}

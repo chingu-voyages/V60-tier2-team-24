@@ -1,4 +1,4 @@
-import { Application } from "@/utils/localStorage";
+import { Application } from "@/utils/dataWrapper";
 import EmptyState from "./EmptyState";
 import ApplicationCard from "./ApplicationCard";
 
@@ -9,10 +9,10 @@ function ApplicationList({
   onDelete,
   onView,
 }: {
-  applications: { application: Application; index: number }[];
+  applications: Application[];
   totalApplicationsCount: number;
-  onEdit: (application: Application, index: number) => void;
-  onDelete: (index: number) => void;
+  onEdit: (application: Application) => void;
+  onDelete: (id: string) => void;
   onView: (application: Application) => void;
 }) {
   if (applications.length === 0) {
@@ -31,16 +31,14 @@ function ApplicationList({
 
   return (
     <div className="grid gap-4">
-      {applications.map(({ application, index }) => (
-        // key to be changed to id when backend is implemented
+      {applications.map((application) => (
         <div
-          key={index}
+          key={application.id}
           className="cursor-pointer"
           onClick={() => onView(application)}
         >
           <ApplicationCard
             application={application}
-            index={index}
             onEdit={onEdit}
             onDelete={onDelete}
           />

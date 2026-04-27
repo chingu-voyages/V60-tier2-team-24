@@ -9,37 +9,43 @@ import DeleteConfirmationModal from "@/components/modals/ConfirmDeleteModal";
 import ApplicationsStatusFilter from "@/components/applications/ApplicationsStatusFilter";
 
 import { useApplications } from "@/hooks/useApplications";
+import { Application } from "@/utils/dataWrapper";
 import { useApplicationStatusFilter } from "@/hooks/useApplicationStatusFilter";
-import { Application } from "@/utils/localStorage";
 
 export function ApplicationsPage() {
   const [open, setOpen] = useState(false);
   const [removeOpen, setRemoveOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] =
     useState<Application | null>(null);
 
-  const { applications, addApplication, updateApplication, removeApplication } =
-    useApplications();
+  const {
+    applications,
+    addApplication,
+    updateApplication,
+    removeApplication,
+    loading,
+    error,
+  } = useApplications();
   const { selectedStatuses, filteredApplications, toggleStatus } =
     useApplicationStatusFilter(applications);
   const [editApplication, setEditApplication] = useState<Application | null>(
     null,
   );
 
-  // NOTE: index for update application - need to switch to proper id when backend implementation to avoid wrong renders
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const handleCreate = () => {
     setEditApplication(null);
-    setEditIndex(null);
+    setEditId(null);
     setOpen(true);
   };
 
-  const handleEdit = (app: Application, index: number) => {
+  const handleEdit = (app: Application) => {
     setEditApplication(app);
-    setEditIndex(index);
+    setEditId(app.id);
     setOpen(true);
   };
 
@@ -48,21 +54,29 @@ export function ApplicationsPage() {
     setDetailsOpen(true);
   };
 
-  const handleDelete = (index: number) => {
-    setDeleteIndex(index);
+  const handleDelete = (id: string) => {
+    setDeleteId(id);
     setRemoveOpen(true);
   };
 
-  const handleRemoveConfirm = () => {
-    if (deleteIndex !== null) removeApplication(deleteIndex);
-    setDeleteIndex(null);
-    setRemoveOpen(false);
-    toast.success("Application removed!");
+  const handleRemoveConfirm = async () => {
+    if (!deleteId) return;
+    setDeleteLoading(true);
+    try {
+      await removeApplication(deleteId);
+      toast.success("Application removed!");
+      setRemoveOpen(false);
+    } catch (error) {
+      toast.error("Failed to remove application.");
+    } finally {
+      setDeleteLoading(false);
+      setDeleteId(null);
+    }
   };
 
   const handleRemoveOpenChange = (open: boolean) => {
     setRemoveOpen(open);
-    if (!open) setDeleteIndex(null);
+    if (!open) setDeleteId(null);
   };
 
   return (
@@ -91,29 +105,41 @@ export function ApplicationsPage() {
         </div>
 
         <NewApplicationModal
-          key={editIndex !== null ? `edit-${editIndex}` : "new"} // temporary key until proper id
+          key={editId !== null ? `edit-${editId}` : "new"}
           open={open}
           onOpenChange={(val) => {
             setOpen(val);
             if (!val) {
               setEditApplication(null);
-              setEditIndex(null);
+              setEditId(null);
             }
           }}
           editApplication={editApplication}
-          index={editIndex}
+          id={editId}
           onSave={addApplication}
           onUpdate={updateApplication}
         />
       </div>
 
-      <ApplicationList
-        applications={filteredApplications}
-        totalApplicationsCount={applications.length}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onView={handleView}
-      />
+      {loading ? (
+        <div className="text-center py-10 text-gray-500">
+          Loading applications...
+        </div>
+      ) : error ? (
+        <div className="text-center py-10">
+          <p className="text-red-500 font-semibold">
+            Failed to load applications
+          </p>
+        </div>
+      ) : (
+        <ApplicationList
+          applications={filteredApplications}
+          totalApplicationsCount={applications.length}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onView={handleView}
+        />
+      )}
 
       <JobDetailsModal
         open={detailsOpen}
@@ -125,6 +151,7 @@ export function ApplicationsPage() {
         open={removeOpen}
         onOpenChange={handleRemoveOpenChange}
         onConfirm={handleRemoveConfirm}
+        loading={deleteLoading}
       />
     </section>
   );
