@@ -9,6 +9,7 @@ import { RegisterFormData, registerSchema } from "@/lib/registerSchema";
 import { createUserWithEmailAndPassword, signInWithPopup, updateProfile } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase";
 import { toast } from "sonner";
+import { getFirebaseErrorMessage } from "@/utils/firebaseErrors";
 
 
 export const RegisterPage = () => {
@@ -68,26 +69,34 @@ export const RegisterPage = () => {
             toast.success("Account created successfully");
             navigate("/");
         } catch (error: any) {
-            if (error.code === "auth/email-already-in-use") {
-                setErrors({ email: "This email is already registered" });
-            } else if (error.code === "auth/weak-password") {
-                setErrors({ password: "Password is too weak" });
-            } else {
-                toast.error("Something went wrong. Please try again.")
-            }
+            const message = getFirebaseErrorMessage(error.code);
+
+            if (message) {
+                if (error.code === "auth/email-already-in-use" || error.code === "auth/invalid-email") {
+                    setErrors({ email: message });
+                } else if (error.code === "auth/weak-password") {
+                    setErrors({ password: message });
+                } else {
+                    toast.error(message);
+                }
+            }    
         } finally {
             setLoading(false);
         }
     };
     
     const handleGoogleSignIn = async () => {
+        setLoading(true);
         try {
             await signInWithPopup(auth, googleProvider);
             toast.success("Signed in with Google!");
             navigate("/");
         } catch (error: any) {
             console.log("Google error:", error.code, error.message);
-            toast.error("Google sign-in failed. Please try again.");
+            const message = getFirebaseErrorMessage(error.code);
+            if (message) toast.error(message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -131,7 +140,7 @@ export const RegisterPage = () => {
                                 placeholder="alex@example.com"
                                 value={formValues.email}
                                 onChange={handleChange}
-                                className={`w-full ${inputStyles(false)}`} />
+                                className={`w-full ${inputStyles(!!errors.email)}`} />
                             {errors.email && (
                                 <p className="text-red-500 text-xs mt-1">{errors.email}</p>
                             )}
@@ -145,7 +154,7 @@ export const RegisterPage = () => {
                                     placeholder="Min 8 characters"
                                     value={formValues.password}
                                     onChange={handleChange}
-                                    className={`w-full ${inputStyles(false)}`} />
+                                    className={`w-full ${inputStyles(!!errors.password)}`} />
                                 <button type="button"
                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94a3b8] hover:text-[#424654]"
                                     onClick={() => setShowPassword(!showPassword)}>
@@ -171,7 +180,8 @@ export const RegisterPage = () => {
                         <Button
                             variant="outline"
                             onClick={handleGoogleSignIn}
-                            className="w-full py-4 mt-2 rounded-lg font-bold font-manrope text-base border-[#c3c6d6]/50 shadow-sm">
+                            disabled={loading}
+                            className="w-full py-4 mt-2 rounded-lg font-bold font-manrope text-base border-[#c3c6d6]/50 shadow-sm disabled:opacity-50">
                             <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
                                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
                                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />

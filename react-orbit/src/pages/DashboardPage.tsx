@@ -67,7 +67,7 @@ export function DashboardPage() {
   return (
     <div>
       <h1 className="text-4xl font-extrabold font-manrope mb-4">
-        Welcome back,{auth.currentUser?.displayName}.
+        Welcome back,{auth.currentUser?.displayName || "User"}.
       </h1>
 
       <Button
