@@ -143,6 +143,7 @@ export function ApplicationsPage() {
 
       <JobDetailsModal
         open={detailsOpen}
+        onEdit={handleEdit}
         onOpenChange={setDetailsOpen}
         application={selectedApplication}
       />
