@@ -21,7 +21,9 @@ const LoginForm = () => {
     email: "",
     password: "",
   });
-  const [errors, setErrors] = useState<Partial<LoginFormData>>({});
+  const [errors, setErrors] = useState<
+    Partial<LoginFormData> & { form?: string }
+  >({});
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -29,13 +31,7 @@ const LoginForm = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormValues((prev) => ({ ...prev, [name]: value }));
-    if (errors[name as keyof LoginFormData]) {
-      setErrors((prev) => {
-        const updated = { ...prev };
-        delete updated[name as keyof LoginFormData];
-        return updated;
-      });
-    }
+    setErrors({});
   };
 
   const handleSubmit = async (e: React.SubmitEvent) => {
@@ -70,7 +66,7 @@ const LoginForm = () => {
           error.code === "auth/invalid-credential"
         ) {
           // Intentionally generic — avoids confirming whether an email exists
-          setErrors({ email: "Incorrect email or password" });
+          setErrors({ form: "Incorrect email or password" });
         } else {
           toast.error("Something went wrong. Please try again.");
         }
@@ -120,6 +116,11 @@ const LoginForm = () => {
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          {errors.form && (
+            <p className="text-red-500 text-sm text-center my-1 font-semibold">
+              {errors.form}
+            </p>
+          )}
           <div className="space-y-1">
             <Label className="text-gray-600">Email</Label>
             <Input
