@@ -53,7 +53,9 @@ const getInitialState = (
 });
 
 const inputStyles = (hasError: boolean) =>
-  `bg-[#f2f4f6] rounded-lg border-0 placeholder:text-[#94a3b8] ${hasError ? "border-2 border-red-500" : ""}`;
+  `bg-[#f2f4f6] rounded-lg border-0 placeholder:text-[#94a3b8] ${
+    hasError ? "border-2 border-red-500" : ""
+  }`;
 
 const NewApplicationModal = ({
   open,
@@ -67,7 +69,6 @@ const NewApplicationModal = ({
     getInitialState(editApplication),
   );
 
-  // Per-field validation errors (keys match the Zod schema field names)
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
@@ -75,13 +76,13 @@ const NewApplicationModal = ({
     field: K,
     value: ApplicationInput[K],
   ) => {
-    setFormState((prev: ApplicationInput) => ({ ...prev, [field]: value }));
+    setFormState((prev) => ({ ...prev, [field]: value }));
   };
 
   const saveApplication = async () => {
     const validation = applicationSchema.safeParse(formState);
+
     if (!validation.success) {
-      // Build a map of field name → first error message
       const fieldErrors: Record<string, string> = {};
       for (const issue of validation.error.issues) {
         const key = issue.path[0] as string;
@@ -94,7 +95,6 @@ const NewApplicationModal = ({
       return;
     }
 
-    // Clear any previous errors
     setErrors({});
     setLoading(true);
 
@@ -106,7 +106,7 @@ const NewApplicationModal = ({
         await onSave(validation.data);
         toast.success("Application saved!");
       }
-      // close modal after saving
+
       onOpenChange(false);
       setFormState(getInitialState(undefined));
     } catch (error) {
@@ -115,6 +115,7 @@ const NewApplicationModal = ({
       setLoading(false);
     }
   };
+
   const handleOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
       setErrors({});
@@ -125,8 +126,8 @@ const NewApplicationModal = ({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-[672px] max-h-[684px] overflow-y-auto sm:rounded-2xl">
-        <DialogHeader className="flex-shrink-0">
+      <DialogContent className="max-w-2xl h-[90vh] flex flex-col sm:rounded-2xl">
+        <DialogHeader className="shrink-0 border-b pb-3">
           <DialogTitle>
             {id ? "Edit Application" : "Add New Application"}
           </DialogTitle>
@@ -134,190 +135,197 @@ const NewApplicationModal = ({
             Fill in the details of your latest career opportunity
           </DialogDescription>
         </DialogHeader>
-      <div className="flex-1 overflow-y-auto px-1">
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <Label
-              htmlFor="company-name"
-              className="text-xs m-2 font-manrope uppercase tracking-wide"
-            >
-              Company Name <span className="text-red-500">*</span>
-            </Label>
-            <div className="relative pt-1">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Building2 className=" h-4 w-4 text-[#94a3b8]" />
-              </span>
-              <Input
-                id="company-name"
-                type="text"
-                className={`pl-10 ${inputStyles(!!errors.CompanyName)}`}
-                placeholder="e.g. Acme Corp"
-                value={formState.CompanyName}
-                onChange={(e) => updateInput("CompanyName", e.target.value)}
-              />
-            </div>
-            {errors.CompanyName && (
-              <p className="text-red-500 text-xs mt-1">{errors.CompanyName}</p>
-            )}
-          </div>
-          <div>
-            <Label
-              htmlFor="job-title"
-              className="text-xs m-2 font-manrope uppercase tracking-wide"
-            >
-              Job Role/Title <span className="text-red-500">*</span>
-            </Label>
-            <div className="relative pt-1">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Briefcase className=" h-4 w-4 text-[#94a3b8]" />
-              </span>
-              <Input
-                id="job-title"
-                type="text"
-                className={`pl-10 ${inputStyles(!!errors.Role)}`}
-                placeholder="e.g. Software Engineer"
-                value={formState.Role}
-                onChange={(e) => updateInput("Role", e.target.value)}
-              />
-            </div>
-            {errors.Role && (
-              <p className="text-red-500 text-xs mt-1">{errors.Role}</p>
-            )}
-          </div>
-          <div>
-            <Label
-              htmlFor="date-applied"
-              className="text-xs m-2 font-manrope uppercase tracking-wide"
-            >
-              Date Applied <span className="text-red-500">*</span>
-            </Label>
-            <div className="relative pt-1">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Calendar className=" h-4 w-4 text-[#94a3b8]" />
-              </span>
-              <Input
-                id="date-applied"
-                type="date"
-                value={formState.DateApplied}
-                onChange={(e) => updateInput("DateApplied", e.target.value)}
-                className={`pl-10 ${inputStyles(!!errors.DateApplied)}`}
-              />
-            </div>
-            {errors.DateApplied && (
-              <p className="text-red-500 text-xs mt-1">{errors.DateApplied}</p>
-            )}
-          </div>
-          <div>
-            <Label
-              htmlFor="location"
-              className="text-xs m-2 font-manrope uppercase tracking-wide"
-            >
-              Location <span className="text-red-500">*</span>
-            </Label>
-            <div className="relative pt-1">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <MapPin className=" h-4 w-4 text-[#94a3b8]" />
-              </span>
-              <Input
-                id="location"
-                type="text"
-                className={`pl-10 ${inputStyles(!!errors.Location)}`}
-                placeholder="e.g. New York, NY"
-                value={formState.Location}
-                onChange={(e) => updateInput("Location", e.target.value)}
-              />
-            </div>
-            {errors.Location && (
-              <p className="text-red-500 text-xs mt-1">{errors.Location}</p>
-            )}
-          </div>
-          <div>
-            <Label
-              htmlFor="status"
-              className="text-xs m-2 font-manrope uppercase tracking-wide"
-            >
-              Current Status <span className="text-red-500">*</span>
-            </Label>
-            <div className="relative pt-1">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <CircleDot className=" h-4 w-4 text-[#94a3b8]" />
-              </span>
-              <Select
-                value={formState.Status}
-                onValueChange={(value) => updateInput("Status", value)}
+
+        {/* BODY (SCROLLABLE) */}
+        <div className="flex-1 overflow-y-auto px-1 py-2">
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <Label
+                htmlFor="company-name"
+                className="text-xs m-2 font-manrope uppercase tracking-wide"
               >
-                <SelectTrigger
-                  className={`pl-10 ${inputStyles(!!errors.Status)}`}
+                Company Name <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative pt-1">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Building2 className=" h-4 w-4 text-[#94a3b8]" />
+                </span>
+                <Input
+                  id="company-name"
+                  type="text"
+                  className={`pl-10 ${inputStyles(!!errors.CompanyName)}`}
+                  placeholder="e.g. Acme Corp"
+                  value={formState.CompanyName}
+                  onChange={(e) => updateInput("CompanyName", e.target.value)}
+                />
+              </div>
+              {errors.CompanyName && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.CompanyName}
+                </p>
+              )}
+            </div>
+            <div>
+              <Label
+                htmlFor="job-title"
+                className="text-xs m-2 font-manrope uppercase tracking-wide"
+              >
+                Job Role/Title <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative pt-1">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Briefcase className=" h-4 w-4 text-[#94a3b8]" />
+                </span>
+                <Input
+                  id="job-title"
+                  type="text"
+                  className={`pl-10 ${inputStyles(!!errors.Role)}`}
+                  placeholder="e.g. Software Engineer"
+                  value={formState.Role}
+                  onChange={(e) => updateInput("Role", e.target.value)}
+                />
+              </div>
+              {errors.Role && (
+                <p className="text-red-500 text-xs mt-1">{errors.Role}</p>
+              )}
+            </div>
+            <div>
+              <Label
+                htmlFor="date-applied"
+                className="text-xs m-2 font-manrope uppercase tracking-wide"
+              >
+                Date Applied <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative pt-1">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Calendar className=" h-4 w-4 text-[#94a3b8]" />
+                </span>
+                <Input
+                  id="date-applied"
+                  type="date"
+                  value={formState.DateApplied}
+                  onChange={(e) => updateInput("DateApplied", e.target.value)}
+                  className={`pl-10 ${inputStyles(!!errors.DateApplied)}`}
+                />
+              </div>
+              {errors.DateApplied && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.DateApplied}
+                </p>
+              )}
+            </div>
+            <div>
+              <Label
+                htmlFor="location"
+                className="text-xs m-2 font-manrope uppercase tracking-wide"
+              >
+                Location <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative pt-1">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <MapPin className=" h-4 w-4 text-[#94a3b8]" />
+                </span>
+                <Input
+                  id="location"
+                  type="text"
+                  className={`pl-10 ${inputStyles(!!errors.Location)}`}
+                  placeholder="e.g. New York, NY"
+                  value={formState.Location}
+                  onChange={(e) => updateInput("Location", e.target.value)}
+                />
+              </div>
+              {errors.Location && (
+                <p className="text-red-500 text-xs mt-1">{errors.Location}</p>
+              )}
+            </div>
+            <div>
+              <Label
+                htmlFor="status"
+                className="text-xs m-2 font-manrope uppercase tracking-wide"
+              >
+                Current Status <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative pt-1">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <CircleDot className=" h-4 w-4 text-[#94a3b8]" />
+                </span>
+                <Select
+                  value={formState.Status}
+                  onValueChange={(value) => updateInput("Status", value)}
                 >
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={APPLICATION_STATUSES.APPLIED}>
-                    Applied
-                  </SelectItem>
-                  <SelectItem value={APPLICATION_STATUSES.INTERVIEW}>
-                    Interview
-                  </SelectItem>
-                  <SelectItem value={APPLICATION_STATUSES.OFFER}>
-                    Offer
-                  </SelectItem>
-                  <SelectItem value={APPLICATION_STATUSES.REJECTED}>
-                    Rejected
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+                  <SelectTrigger
+                    className={`pl-10 ${inputStyles(!!errors.Status)}`}
+                  >
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={APPLICATION_STATUSES.APPLIED}>
+                      Applied
+                    </SelectItem>
+                    <SelectItem value={APPLICATION_STATUSES.INTERVIEW}>
+                      Interview
+                    </SelectItem>
+                    <SelectItem value={APPLICATION_STATUSES.OFFER}>
+                      Offer
+                    </SelectItem>
+                    <SelectItem value={APPLICATION_STATUSES.REJECTED}>
+                      Rejected
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {errors.Status && (
+                <p className="text-red-500 text-xs mt-1">{errors.Status}</p>
+              )}
             </div>
-            {errors.Status && (
-              <p className="text-red-500 text-xs mt-1">{errors.Status}</p>
-            )}
-          </div>
-          <div>
-            <Label
-              htmlFor="link"
-              className="text-xs m-2 font-manrope uppercase tracking-wide"
-            >
-              Job Link <span className="text-red-500">*</span>
-            </Label>
-            <div className="relative pt-1">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Link className=" h-4 w-4 text-[#94a3b8]" />
-              </span>
-              <Input
-                id="link"
-                type="text"
-                className={`pl-10 ${inputStyles(!!errors.JobLink)}`}
-                placeholder="e.g. https://example.com/job..."
-                value={formState.JobLink}
-                onChange={(e) => updateInput("JobLink", e.target.value)}
-              />
+            <div>
+              <Label
+                htmlFor="link"
+                className="text-xs m-2 font-manrope uppercase tracking-wide"
+              >
+                Job Link <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative pt-1">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Link className=" h-4 w-4 text-[#94a3b8]" />
+                </span>
+                <Input
+                  id="link"
+                  type="text"
+                  className={`pl-10 ${inputStyles(!!errors.JobLink)}`}
+                  placeholder="e.g. https://example.com/job..."
+                  value={formState.JobLink}
+                  onChange={(e) => updateInput("JobLink", e.target.value)}
+                />
+              </div>
+              {errors.JobLink && (
+                <p className="text-red-500 text-xs mt-1">{errors.JobLink}</p>
+              )}
             </div>
-            {errors.JobLink && (
-              <p className="text-red-500 text-xs mt-1">{errors.JobLink}</p>
-            )}
-          </div>
-          <div className="col-span-2">
-            <Label
-              htmlFor="notes"
-              className="text-xs m-2 font-manrope uppercase tracking-wide"
-            >
-              Notes <span className="text-red-500">*</span>
-            </Label>
-            <div className="relative pt-1">
-              <Textarea
-                id="notes"
-                value={formState.Notes}
-                onChange={(e) => updateInput("Notes", e.target.value)}
-                className={`min-h-[120px] ${inputStyles(!!errors.Notes)}`}
-                placeholder="Mention key requirements, interview stages, or personal thoughts..."
-              />
+            <div className="col-span-2">
+              <Label
+                htmlFor="notes"
+                className="text-xs m-2 font-manrope uppercase tracking-wide"
+              >
+                Notes <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative pt-1">
+                <Textarea
+                  id="notes"
+                  value={formState.Notes}
+                  onChange={(e) => updateInput("Notes", e.target.value)}
+                  className={`min-h-30 ${inputStyles(!!errors.Notes)}`}
+                  placeholder="Mention key requirements, interview stages, or personal thoughts..."
+                />
+              </div>
+              {errors.Notes && (
+                <p className="text-red-500 text-xs mt-1">{errors.Notes}</p>
+              )}
             </div>
-            {errors.Notes && (
-              <p className="text-red-500 text-xs mt-1">{errors.Notes}</p>
-            )}
           </div>
         </div>
-      </div>
-        <div className="flex gap-3 p-4 justify-end flex-shrink-0 border-t mt-2">
+
+        <div className="flex gap-3 p-4 justify-end border-t shrink-0">
           <Button variant="ghost" onClick={() => handleOpenChange(false)}>
             Cancel
           </Button>

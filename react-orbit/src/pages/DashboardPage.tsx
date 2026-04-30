@@ -82,7 +82,7 @@ export function DashboardPage() {
   return (
     <div>
       <h1 className="text-4xl font-extrabold font-manrope mb-4">
-        Welcome back,{auth.currentUser?.displayName || "User"}.
+        Welcome back, {auth.currentUser?.displayName || "User"}.
       </h1>
 
       <Button
@@ -166,6 +166,7 @@ export function DashboardPage() {
       </div>
       <JobDetailsModal
         open={detailsOpen}
+        onEdit={handleEdit}
         onOpenChange={setDetailsOpen}
         application={selectedApplication}
       />
