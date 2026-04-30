@@ -12,6 +12,7 @@ import {
   Building2,
   Calendar,
   CircleDot,
+  FileUp,
   Link,
   MapPin,
 } from "lucide-react";
@@ -71,12 +72,36 @@ const NewApplicationModal = ({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [resumeError, setResumeError] = useState<string | null>(null);
 
   const updateInput = <K extends keyof ApplicationInput>(
     field: K,
     value: ApplicationInput[K],
   ) => {
     setFormState((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleResumeUpload = (file: File | null) => {
+    if (!file) return;
+
+    // Validate type
+    if (file.type !== "application/pdf") {
+      setResumeError("Only PDF files are allowed");
+      setResumeFile(null);
+      return;
+    }
+
+    // Validate size (5MB max)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      setResumeError("File size must be less than 5MB");
+      setResumeFile(null);
+      return;
+    }
+
+    setResumeError(null);
+    setResumeFile(file);
   };
 
   const saveApplication = async () => {
@@ -109,6 +134,7 @@ const NewApplicationModal = ({
 
       onOpenChange(false);
       setFormState(getInitialState(undefined));
+      setResumeFile(null);
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -300,6 +326,45 @@ const NewApplicationModal = ({
               </div>
               {errors.JobLink && (
                 <p className="text-red-500 text-xs mt-1">{errors.JobLink}</p>
+              )}
+            </div>
+            <div className="col-span-2">
+              <Label
+                htmlFor="resume"
+                className="text-xs m-2 font-manrope tracking-wide"
+              >
+                <span className="uppercase">Resume </span>{" "}
+                <span>(optional - pdf only, max 5mb)</span>
+              </Label>
+
+              <input
+                id="resume"
+                type="file"
+                accept="application/pdf"
+                className="hidden"
+                onChange={(e) =>
+                  handleResumeUpload(e.target.files?.[0] || null)
+                }
+              />
+
+              <label
+                htmlFor="resume"
+                className="flex items-center gap-3 border-2 border-dashed border-gray-300 rounded-xl px-4 py-2 cursor-pointer bg-gray-50 hover:bg-gray-100 transition"
+              >
+                <FileUp className="h-5 w-5 text-gray-400" />
+                <span className="text-sm text-gray-600 truncate">
+                  {resumeFile ? resumeFile.name : "Upload Resume (PDF only)"}
+                </span>
+              </label>
+
+              {resumeFile && (
+                <p className="text-xs mt-1 text-gray-500">
+                  Click to replace file
+                </p>
+              )}
+
+              {resumeError && (
+                <p className="text-red-500 text-xs mt-1">{resumeError}</p>
               )}
             </div>
             <div className="col-span-2">
