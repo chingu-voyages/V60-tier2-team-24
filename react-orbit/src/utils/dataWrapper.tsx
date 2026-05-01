@@ -55,17 +55,10 @@ export const dataWrapper = {
 
   // Update a specific application by id with partial changes
 
-  async updateApplication(
-    userId: string,
-    id: string,
-    changes: Partial<ApplicationInput>,
-  ) {
+  async updateApplication(id: string, changes: Partial<ApplicationInput>) {
     const docRef = doc(db, COLLECTION_NAME, id);
 
-    await updateDoc(docRef, {
-      ...changes,
-      userId,
-    });
+    await updateDoc(docRef, changes);
   },
 
   // Remove a specific application by id

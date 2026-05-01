@@ -67,7 +67,7 @@ export function useApplications() {
       prev.map((app) => (app.id === id ? { ...app, ...application } : app)),
     );
     try {
-      await dataWrapper.updateApplication(userId, id, application);
+      await dataWrapper.updateApplication(id, application);
     } catch (error) {
       setApplications(previous);
       console.error("Failed to update application:", error);
