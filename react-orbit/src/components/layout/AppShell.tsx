@@ -4,9 +4,11 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SearchProvider } from "@/context/SearchContext";
 
 export function AppShell() {
   return (
+    <SearchProvider>
     <SidebarProvider>
       <Sidebar />
       <SidebarInset>
@@ -16,6 +18,7 @@ export function AppShell() {
         </main>
         <Footer />
       </SidebarInset>
-    </SidebarProvider>
+      </SidebarProvider>
+      </SearchProvider>
   );
 }
