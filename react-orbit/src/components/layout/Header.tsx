@@ -1,8 +1,7 @@
-import { Bell, Search, Settings } from "lucide-react";
+import { Bell, Search, Settings, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import avatar from "@/assets/avatar.png";
 import { useSearch } from "@/context/SearchContext";
 
 export function Header() {
@@ -44,12 +43,13 @@ export function Header() {
         >
           <Settings className="size-5" />
         </Button>
-        <div className="ml-1 h-8 w-8 overflow-hidden rounded-full border border-slate-200">
-          <img
+        <div className="ml-1 h-8 w-8 overflow-hidden rounded-full border border-slate-100">
+          {/* <img
             src={avatar}
             alt="User avatar"
             className="h-full w-full object-cover"
-          />
+          /> */}
+          <User className="h-full w-full object-cover" />
         </div>
       </div>
     </header>
