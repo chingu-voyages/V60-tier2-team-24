@@ -57,7 +57,7 @@ const LoginForm = () => {
         validation.data.email,
         validation.data.password,
       );
-      navigate("/");
+      navigate("/dashboard");
     } catch (error: unknown) {
       if (error instanceof FirebaseError) {
         if (
@@ -80,7 +80,7 @@ const LoginForm = () => {
     setGoogleLoading(true);
     try {
       await signInWithPopup(auth, googleProvider);
-      navigate("/");
+      navigate("/dashboard");
     } catch (error: any) {
       const message = getFirebaseErrorMessage(error.code);
       if (message) toast.error(message);

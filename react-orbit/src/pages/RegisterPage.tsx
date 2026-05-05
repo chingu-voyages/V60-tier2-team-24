@@ -75,7 +75,7 @@ export const RegisterPage = () => {
       });
 
       toast.success("Account created successfully");
-      navigate("/");
+      navigate("/dashboard");
     } catch (error: any) {
       const message = getFirebaseErrorMessage(error.code);
 
@@ -101,7 +101,7 @@ export const RegisterPage = () => {
     try {
       await signInWithPopup(auth, googleProvider);
       toast.success("Signed in with Google!");
-      navigate("/");
+      navigate("/dashboard");
     } catch (error: any) {
       const message = getFirebaseErrorMessage(error.code);
       if (message) toast.error(message);

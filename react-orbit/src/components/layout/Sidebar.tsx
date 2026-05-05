@@ -26,13 +26,13 @@ import orbitLogo from "@/assets/orbit-logo.svg";
 const items = [
   {
     title: "Dashboard",
-    url: "/",
+    url: "/dashboard",
     icon: LayoutDashboard,
     end: true,
   },
   {
     title: "Applications",
-    url: "/applications",
+    url: "/dashboard/applications",
     icon: Briefcase,
   },
 ];
@@ -78,7 +78,7 @@ export function Sidebar() {
                 className="h-auto overflow-visible rounded-xl p-0 hover:bg-transparent group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:justify-center"
               >
                 <NavLink
-                  to="/"
+                  to="/dashboard"
                   end
                   onClick={closeMobileSidebar}
                   className={cn(
