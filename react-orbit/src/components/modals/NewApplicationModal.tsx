@@ -1,3 +1,15 @@
+import { useState } from "react";
+import {
+  Briefcase,
+  Building2,
+  Calendar,
+  CircleDot,
+  FileUp,
+  Link,
+  MapPin,
+} from "lucide-react";
+import { toast } from "sonner";
+
 import {
   Dialog,
   DialogContent,
@@ -8,15 +20,6 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
-  Briefcase,
-  Building2,
-  Calendar,
-  CircleDot,
-  FileUp,
-  Link,
-  MapPin,
-} from "lucide-react";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -25,11 +28,11 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+
 import { Application } from "@/utils/dataWrapper";
-import { useState } from "react";
 import { ApplicationInput, applicationSchema } from "@/lib/application";
-import { toast } from "sonner";
 import { APPLICATION_STATUSES } from "@/constants/applicationStatus";
+import uploadImage from "@/utils/upload";
 
 type NewApplicationModalProps = {
   open: boolean;
@@ -57,6 +60,12 @@ const inputStyles = (hasError: boolean) =>
   `bg-[#f2f4f6] rounded-lg border-0 placeholder:text-[#94a3b8] ${
     hasError ? "border-2 border-red-500" : ""
   }`;
+
+const getFileName = (url?: string) => {
+  if (!url) return "";
+  const name = url.split("/").pop() || "";
+  return name.length > 30 ? name.slice(0, 30) + "..." : name;
+};
 
 const NewApplicationModal = ({
   open,
@@ -124,11 +133,33 @@ const NewApplicationModal = ({
     setLoading(true);
 
     try {
+      let resumeData = {
+        url: editApplication?.ResumeUrl ?? "",
+        public_id: editApplication?.ResumePublicId ?? "",
+      };
+
+      if (resumeFile) {
+        const { data } = await uploadImage(resumeFile);
+
+        resumeData = {
+          url: data.secure_url,
+          public_id: data.public_id,
+        };
+      }
       if (editApplication && id) {
-        await onUpdate(id, validation.data);
+        await onUpdate(id, {
+          ...validation.data,
+          ResumeUrl: resumeData?.url ?? editApplication?.ResumeUrl,
+          ResumePublicId:
+            resumeData?.public_id ?? editApplication?.ResumePublicId,
+        });
         toast.success("Application updated!");
       } else {
-        await onSave(validation.data);
+        await onSave({
+          ...validation.data,
+          ResumeUrl: resumeData?.url,
+          ResumePublicId: resumeData?.public_id,
+        });
         toast.success("Application saved!");
       }
 
@@ -352,14 +383,30 @@ const NewApplicationModal = ({
                 className="flex items-center gap-3 border-2 border-dashed border-gray-300 rounded-xl px-4 py-2 cursor-pointer bg-gray-50 hover:bg-gray-100 transition"
               >
                 <FileUp className="h-5 w-5 text-gray-400" />
-                <span className="text-sm text-gray-600 truncate">
-                  {resumeFile ? resumeFile.name : "Upload Resume (PDF only)"}
+                <span
+                  className={`text-sm truncate ${
+                    resumeFile || editApplication?.ResumeUrl
+                      ? "text-blue-700"
+                      : "text-gray-600"
+                  }`}
+                >
+                  {resumeFile
+                    ? resumeFile.name
+                    : editApplication?.ResumeUrl
+                      ? `Current: ${getFileName(editApplication.ResumeUrl)}`
+                      : "Upload Resume (PDF only)"}
                 </span>
               </label>
 
               {resumeFile && (
                 <p className="text-xs mt-1 text-gray-500">
                   Click to replace file
+                </p>
+              )}
+
+              {editApplication?.ResumeUrl && !resumeFile && (
+                <p className="text-xs mt-1 text-blue-600">
+                  Resume already uploaded. Click to replace resume
                 </p>
               )}
 

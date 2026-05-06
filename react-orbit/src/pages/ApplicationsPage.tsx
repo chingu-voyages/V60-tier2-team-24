@@ -17,8 +17,9 @@ export function ApplicationsPage() {
   const [removeOpen, setRemoveOpen] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [selectedApplication, setSelectedApplication] =
-    useState<Application | null>(null);
+  const [selectedApplicationId, setSelectedApplicationId] = useState<
+    string | null
+  >(null);
 
   const {
     applications,
@@ -50,7 +51,7 @@ export function ApplicationsPage() {
   };
 
   const handleView = (app: Application) => {
-    setSelectedApplication(app);
+    setSelectedApplicationId(app.id);
     setDetailsOpen(true);
   };
 
@@ -78,6 +79,9 @@ export function ApplicationsPage() {
     setRemoveOpen(open);
     if (!open) setDeleteId(null);
   };
+
+  const selectedApplication =
+    applications.find((app) => app.id === selectedApplicationId) || null;
 
   return (
     <section className="space-y-6">

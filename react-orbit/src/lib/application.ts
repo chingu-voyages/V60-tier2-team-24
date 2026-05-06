@@ -16,8 +16,10 @@ export const applicationSchema = z.object({
   Status: z.enum(statusValues, {
     message: "Status is required",
   }),
-  JobLink: z.string().url("Invalid URL format"),
+  JobLink: z.url("Invalid URL format"),
   Notes: z.string().min(1, "Notes is required"),
+  ResumeUrl: z.url().optional(),
+  ResumePublicId: z.string().optional(),
 });
 
 export type ApplicationInput = z.infer<typeof applicationSchema>;
