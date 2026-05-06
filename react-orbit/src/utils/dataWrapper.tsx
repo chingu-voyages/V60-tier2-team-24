@@ -1,23 +1,34 @@
-import { ApplicationInput } from "@/lib/application";
-export type Application = ApplicationInput & { id: string };
 import {
   addDoc,
   collection,
   deleteDoc,
   doc,
   getDocs,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
+
+import { ApplicationInput } from "@/lib/application";
 import { db } from "@/lib/firebase";
+
+export type Application = ApplicationInput & {
+  id: string;
+  userId: string;
+};
 
 const COLLECTION_NAME = "applications";
 
 export const dataWrapper = {
-  async getApplications(): Promise<Application[]> {
-    const snapshot = await getDocs(collection(db, COLLECTION_NAME));
+  async getApplications(userId: string): Promise<Application[]> {
+    const applicationsQuery = query(
+      collection(db, COLLECTION_NAME),
+      where("userId", "==", userId),
+    );
+    const snapshot = await getDocs(applicationsQuery);
 
     return snapshot.docs.map((doc) => {
-      const data = doc.data() as ApplicationInput;
+      const data = doc.data() as ApplicationInput & { userId: string };
 
       return {
         id: doc.id,
@@ -26,11 +37,19 @@ export const dataWrapper = {
     });
   },
 
-  async addApplication(application: ApplicationInput) {
-    const docRef = await addDoc(collection(db, COLLECTION_NAME), application);
+  async addApplication(userId: string, application: ApplicationInput) {
+    const applicationWithOwner = {
+      ...application,
+      userId,
+    };
+    const docRef = await addDoc(
+      collection(db, COLLECTION_NAME),
+      applicationWithOwner,
+    );
+
     return {
       id: docRef.id,
-      ...application,
+      ...applicationWithOwner,
     };
   },
 
