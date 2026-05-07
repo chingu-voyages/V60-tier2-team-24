@@ -2,6 +2,7 @@ import { type LucideIcon } from 'lucide-react';
 import { Link } from 'react-router';
 import { Sparkles, TrendingUp, History } from 'lucide-react';
 import orbitLogo from '@/assets/orbit-logo.svg';
+import welcomeDecorativeImage from '@/assets/welcome-decorative.png';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 
@@ -172,7 +173,7 @@ export function WelcomePage() {
 
         <div className="absolute bottom-0 right-0 z-0 w-[50vw] md:w-[40vw] h-[700px] md:h-[400px] pointer-events-none opacity-40 overflow-hidden">
           <img
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAF_tqhww-tk8_VwOGsc9t-fEV3RnKOzMITF7P53GtZS3UzNcpDuLng16jS-tsJPrAROZzBbLE5U0QSXYUoMdl2-UKaNRn4ksI6huAltT47doyYWKlF-ZwFLtB4t86u-KrI8DcOgZ9a-Pieu8GccTEeJTXAo7lmXvM2KPXaB1VRchDi4-k5-zVwOLphjraTMBYZGZpz-OFKYfTz_gc6eTotvu-EAY2eLvKnVtujd6b02jkEhKGI2_gAS0sU5XNSHNaQVS8pKDlMcqZ4"
+            src={welcomeDecorativeImage}
             alt=""
             aria-hidden="true"
             className="w-full h-full object-cover rounded-tl-[100px] grayscale brightness-125 contrast-75 mix-blend-multiply"
