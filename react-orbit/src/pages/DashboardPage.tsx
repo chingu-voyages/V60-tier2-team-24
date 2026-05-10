@@ -95,7 +95,7 @@ export function DashboardPage() {
 
       <Button
         onClick={handleCreate}
-        className="bg-[#0040a1] hover:bg-[#003080] text-white"
+        className="bg-[#0040a1] hover:bg-[#003080] text-white cursor-pointer"
       >
         + Add Application
       </Button>
@@ -137,7 +137,7 @@ export function DashboardPage() {
       <div className="flex justify-between">
         <h2 className="text-3xl font-bold mb-4">Recent Activity</h2>
         <Link
-          to="/applications"
+          to="/dashboard/applications"
           className="text-md text-[#1e40af] hover:underline mb-4"
         >
           View All Applications
