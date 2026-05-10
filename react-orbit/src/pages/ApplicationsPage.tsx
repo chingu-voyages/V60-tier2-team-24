@@ -11,6 +11,8 @@ import ApplicationsStatusFilter from "@/components/applications/ApplicationsStat
 import { useApplications } from "@/hooks/useApplications";
 import { Application } from "@/utils/dataWrapper";
 import { useApplicationStatusFilter } from "@/hooks/useApplicationStatusFilter";
+import { filterApplications } from "@/utils/filterApplications";
+import { useSearch } from "@/context/SearchContext";
 
 export function ApplicationsPage() {
   const [open, setOpen] = useState(false);
@@ -28,8 +30,10 @@ export function ApplicationsPage() {
     loading,
     error,
   } = useApplications();
+  const{ searchTerm } = useSearch();
+ const searchedApplications = filterApplications(applications, searchTerm);
   const { selectedStatuses, filteredApplications, toggleStatus } =
-    useApplicationStatusFilter(applications);
+    useApplicationStatusFilter(searchedApplications);
   const [editApplication, setEditApplication] = useState<Application | null>(
     null,
   );

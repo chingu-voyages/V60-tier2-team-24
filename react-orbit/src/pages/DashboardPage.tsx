@@ -12,6 +12,8 @@ import ApplicationCard from "@/components/applications/ApplicationCard";
 import EmptyState from "@/components/applications/EmptyState";
 import DeleteConfirmationModal from "@/components/modals/ConfirmDeleteModal";
 import { auth } from "@/lib/firebase";
+import { filterApplications } from "@/utils/filterApplications";
+import { useSearch } from "@/context/SearchContext";
 
 export function DashboardPage() {
   const [open, setOpen] = useState(false);
@@ -33,9 +35,11 @@ export function DashboardPage() {
     loading,
     error,
   } = useApplications();
+  const { searchTerm } = useSearch();
+  const filteredApplications = filterApplications(applications, searchTerm); // No filter on dashboard, show all
   const { totalApplications, interviewRate, offerRate, rejectionRate } =
     calculateMetrics(applications);
-  const recentApplications = applications.slice(-4).reverse(); // Get the 4 most recent applications
+  const recentApplications = filteredApplications.slice(-4).reverse(); // Get the 4 most recent applications
 
   const handleCreate = () => {
     setEditApplication(null);
