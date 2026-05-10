@@ -15,7 +15,6 @@ import { auth } from "@/lib/firebase";
 import { filterApplications } from "@/utils/filterApplications";
 import { useSearch } from "@/context/SearchContext";
 
-
 export function DashboardPage() {
   const [open, setOpen] = useState(false);
   const [removeOpen, setRemoveOpen] = useState(false);
@@ -37,9 +36,9 @@ export function DashboardPage() {
     error,
   } = useApplications();
   const { searchTerm } = useSearch();
-  const filteredApplications = filterApplications (applications, searchTerm); // No filter on dashboard, show all
+  const filteredApplications = filterApplications(applications, searchTerm); // No filter on dashboard, show all
   const { totalApplications, interviewRate, offerRate, rejectionRate } =
-    calculateMetrics(filteredApplications);
+    calculateMetrics(applications);
   const recentApplications = filteredApplications.slice(-4).reverse(); // Get the 4 most recent applications
 
   const handleCreate = () => {

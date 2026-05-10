@@ -5,8 +5,8 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useSearch } from "@/context/SearchContext";
 
 export function Header() {
-  const {searchTerm, setSearchTerm} = useSearch();
-  
+  const { searchTerm, setSearchTerm } = useSearch();
+
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-slate-100 bg-white px-4 md:px-6">
       <div className="flex flex-1 items-center gap-4">
@@ -44,11 +44,6 @@ export function Header() {
           <Settings className="size-5" />
         </Button>
         <div className="ml-1 h-8 w-8 overflow-hidden rounded-full border border-slate-100">
-          {/* <img
-            src={avatar}
-            alt="User avatar"
-            className="h-full w-full object-cover"
-          /> */}
           <User className="h-full w-full object-cover" />
         </div>
       </div>
