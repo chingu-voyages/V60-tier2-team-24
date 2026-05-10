@@ -19,11 +19,12 @@ export function DashboardPage() {
   const [open, setOpen] = useState(false);
   const [removeOpen, setRemoveOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [selectedApplication, setSelectedApplication] =
-    useState<Application | null>(null);
   const [editApplication, setEditApplication] = useState<Application | null>(
     null,
   );
+  const [selectedApplicationId, setSelectedApplicationId] = useState<
+    string | null
+  >(null);
   const [editId, setEditId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -54,7 +55,7 @@ export function DashboardPage() {
   };
 
   const handleView = (app: Application) => {
-    setSelectedApplication(app);
+    setSelectedApplicationId(app.id);
     setDetailsOpen(true);
   };
 
@@ -82,6 +83,9 @@ export function DashboardPage() {
     setRemoveOpen(open);
     if (!open) setDeleteId(null);
   };
+
+  const selectedApplication =
+    applications.find((app) => app.id === selectedApplicationId) || null;
 
   return (
     <div>

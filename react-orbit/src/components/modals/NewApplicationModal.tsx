@@ -1,3 +1,15 @@
+import { useState } from "react";
+import {
+  Briefcase,
+  Building2,
+  Calendar,
+  CircleDot,
+  FileUp,
+  Link,
+  MapPin,
+} from "lucide-react";
+import { toast } from "sonner";
+
 import {
   Dialog,
   DialogContent,
@@ -8,14 +20,6 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
-  Briefcase,
-  Building2,
-  Calendar,
-  CircleDot,
-  Link,
-  MapPin,
-} from "lucide-react";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -24,11 +28,11 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+
 import { Application } from "@/utils/dataWrapper";
-import { useState } from "react";
 import { ApplicationInput, applicationSchema } from "@/lib/application";
-import { toast } from "sonner";
 import { APPLICATION_STATUSES } from "@/constants/applicationStatus";
+import uploadImage from "@/utils/upload";
 
 type NewApplicationModalProps = {
   open: boolean;
@@ -57,6 +61,12 @@ const inputStyles = (hasError: boolean) =>
     hasError ? "border-2 border-red-500" : ""
   }`;
 
+const getFileName = (url?: string) => {
+  if (!url) return "";
+  const name = url.split("/").pop() || "";
+  return name.length > 30 ? name.slice(0, 30) + "..." : name;
+};
+
 const NewApplicationModal = ({
   open,
   onOpenChange,
@@ -71,12 +81,36 @@ const NewApplicationModal = ({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [resumeError, setResumeError] = useState<string | null>(null);
 
   const updateInput = <K extends keyof ApplicationInput>(
     field: K,
     value: ApplicationInput[K],
   ) => {
     setFormState((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleResumeUpload = (file: File | null) => {
+    if (!file) return;
+
+    // Validate type
+    if (file.type !== "application/pdf") {
+      setResumeError("Only PDF files are allowed");
+      setResumeFile(null);
+      return;
+    }
+
+    // Validate size (5MB max)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      setResumeError("File size must be less than 5MB");
+      setResumeFile(null);
+      return;
+    }
+
+    setResumeError(null);
+    setResumeFile(file);
   };
 
   const saveApplication = async () => {
@@ -99,16 +133,39 @@ const NewApplicationModal = ({
     setLoading(true);
 
     try {
+      let resumeData = {
+        url: editApplication?.ResumeUrl ?? "",
+        public_id: editApplication?.ResumePublicId ?? "",
+      };
+
+      if (resumeFile) {
+        const { data } = await uploadImage(resumeFile);
+
+        resumeData = {
+          url: data.secure_url,
+          public_id: data.public_id,
+        };
+      }
       if (editApplication && id) {
-        await onUpdate(id, validation.data);
+        await onUpdate(id, {
+          ...validation.data,
+          ResumeUrl: resumeData?.url ?? editApplication?.ResumeUrl,
+          ResumePublicId:
+            resumeData?.public_id ?? editApplication?.ResumePublicId,
+        });
         toast.success("Application updated!");
       } else {
-        await onSave(validation.data);
+        await onSave({
+          ...validation.data,
+          ResumeUrl: resumeData?.url,
+          ResumePublicId: resumeData?.public_id,
+        });
         toast.success("Application saved!");
       }
 
       onOpenChange(false);
       setFormState(getInitialState(undefined));
+      setResumeFile(null);
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -300,6 +357,61 @@ const NewApplicationModal = ({
               </div>
               {errors.JobLink && (
                 <p className="text-red-500 text-xs mt-1">{errors.JobLink}</p>
+              )}
+            </div>
+            <div className="col-span-2">
+              <Label
+                htmlFor="resume"
+                className="text-xs m-2 font-manrope tracking-wide"
+              >
+                <span className="uppercase">Resume </span>{" "}
+                <span>(optional - pdf only, max 5mb)</span>
+              </Label>
+
+              <input
+                id="resume"
+                type="file"
+                accept="application/pdf"
+                className="hidden"
+                onChange={(e) =>
+                  handleResumeUpload(e.target.files?.[0] || null)
+                }
+              />
+
+              <label
+                htmlFor="resume"
+                className="flex items-center gap-3 border-2 border-dashed border-gray-300 rounded-xl px-4 py-2 cursor-pointer bg-gray-50 hover:bg-gray-100 transition"
+              >
+                <FileUp className="h-5 w-5 text-gray-400" />
+                <span
+                  className={`text-sm truncate ${
+                    resumeFile || editApplication?.ResumeUrl
+                      ? "text-blue-700"
+                      : "text-gray-600"
+                  }`}
+                >
+                  {resumeFile
+                    ? resumeFile.name
+                    : editApplication?.ResumeUrl
+                      ? `Current: ${getFileName(editApplication.ResumeUrl)}`
+                      : "Upload Resume (PDF only)"}
+                </span>
+              </label>
+
+              {resumeFile && (
+                <p className="text-xs mt-1 text-gray-500">
+                  Click to replace file
+                </p>
+              )}
+
+              {editApplication?.ResumeUrl && !resumeFile && (
+                <p className="text-xs mt-1 text-blue-600">
+                  Resume already uploaded. Click to replace resume
+                </p>
+              )}
+
+              {resumeError && (
+                <p className="text-red-500 text-xs mt-1">{resumeError}</p>
               )}
             </div>
             <div className="col-span-2">
