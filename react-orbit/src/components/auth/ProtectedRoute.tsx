@@ -18,7 +18,7 @@ export const ProtectedRoute = ({
   // prevents a flash-redirect to /login on refresh for authenticated users
   if (loading) return null;
 
-  if (guestOnly && user) return <Navigate to="/" replace />;
+  if (guestOnly && user) return <Navigate to="/dashboard" replace />;
   if (!guestOnly && !user) return <Navigate to="/auth/login" replace />;
 
   return <>{children}</>;

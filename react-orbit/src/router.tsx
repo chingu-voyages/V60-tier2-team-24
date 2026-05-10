@@ -11,52 +11,68 @@ import ErrorPage from "@/pages/ErrorPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import { RegisterPage } from "@/pages/RegisterPage";
 
+import { RootLayout } from "@/components/layout/RootLayout";
+import { WelcomePage } from "@/pages/WelcomePage";
+
 export const router = createBrowserRouter([
   {
-    path: "/auth",
-    element: (
-      <ProtectedRoute guestOnly>
-        <AuthLayout />
-      </ProtectedRoute>
-    ),
-    errorElement: <ErrorPage />,
+    element: <RootLayout />,
     children: [
       {
-        path: "login",
-        element: <LoginPage />,
+        path: "/",
+        element: (
+          <ProtectedRoute guestOnly>
+            <WelcomePage />
+          </ProtectedRoute>
+        ),
+        errorElement: <ErrorPage />,
       },
       {
-        path: "forgot-password",
-        element: <ResetPasswordPage />,
+        path: "/auth",
+        element: (
+          <ProtectedRoute guestOnly>
+            <AuthLayout />
+          </ProtectedRoute>
+        ),
+        errorElement: <ErrorPage />,
+        children: [
+          {
+            path: "login",
+            element: <LoginPage />,
+          },
+          {
+            path: "forgot-password",
+            element: <ResetPasswordPage />,
+          },
+          {
+            path: "register",
+            element: <RegisterPage />,
+          },
+        ],
       },
       {
-        path: "register",
-        element: <RegisterPage />,
+        path: "/dashboard",
+        element: (
+          <ProtectedRoute>
+            <AppShell />
+          </ProtectedRoute>
+        ),
+        errorElement: <ErrorPage />,
+        children: [
+          {
+            index: true,
+            element: <DashboardPage />,
+          },
+          {
+            path: "applications",
+            element: <ApplicationsPage />,
+          },
+        ],
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
       },
     ],
-  },
-  {
-    path: "/",
-    element: (
-      <ProtectedRoute>
-        <AppShell />
-      </ProtectedRoute>
-    ),
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        index: true,
-        element: <DashboardPage />,
-      },
-      {
-        path: "applications",
-        element: <ApplicationsPage />,
-      },
-    ],
-  },
-
-  {
-    path: "*",
-    element: <NotFoundPage />,
   },
 ]);
