@@ -204,7 +204,7 @@ export function Sidebar() {
           <div className="flex justify-center gap-3">
             <Button
               variant="outline"
-              className="w-full rounded-xl py-5 bg-blue-200 text-gray-700 font-semibold"
+              className="w-full rounded-xl py-5 bg-blue-200 text-gray-700 font-semibold cursor-pointer"
               onClick={() => setShowLogoutDialog(false)}
               disabled={isLoggingOut}
             >
@@ -213,7 +213,7 @@ export function Sidebar() {
 
             <Button
               variant="destructive"
-              className="w-full rounded-xl py-5 font-semibold"
+              className="w-full rounded-xl py-5 font-semibold cursor-pointer"
               onClick={handleLogout}
               disabled={isLoggingOut}
             >

@@ -260,6 +260,7 @@ const NewApplicationModal = ({
                 <Input
                   id="date-applied"
                   type="date"
+                   max={new Date().toISOString().split("T")[0]}
                   value={formState.DateApplied}
                   onChange={(e) => updateInput("DateApplied", e.target.value)}
                   className={`pl-10 ${inputStyles(!!errors.DateApplied)}`}
@@ -419,7 +420,7 @@ const NewApplicationModal = ({
                 htmlFor="notes"
                 className="text-xs m-2 font-manrope uppercase tracking-wide"
               >
-                Notes <span className="text-red-500">*</span>
+                Notes
               </Label>
               <div className="relative pt-1">
                 <Textarea
@@ -438,12 +439,12 @@ const NewApplicationModal = ({
         </div>
 
         <div className="flex gap-3 p-4 justify-end border-t shrink-0">
-          <Button variant="ghost" onClick={() => handleOpenChange(false)}>
+          <Button variant="ghost" className="cursor-pointer" onClick={() => handleOpenChange(false)}>
             Cancel
           </Button>
           <Button
             disabled={loading}
-            className="bg-[#0040a1] hover:bg-[#003080] px-8 rounded-lg"
+            className="bg-[#0040a1] hover:bg-[#003080] px-8 rounded-lg cursor-pointer"
             onClick={saveApplication}
           >
             {loading

@@ -208,16 +208,16 @@ const JobDetailsModal = ({
             </div>
           </div>
         )}
-        <DialogFooter className="pt-4 flex flex-row justify-end gap-2">
+        <DialogFooter className="pt-4 flex flex-row justify-end gap-2 cursor-pointer">
           <Button
             variant="ghost"
-            className="text-muted-foreground rounded-full"
+            className="text-muted-foreground rounded-full cursor-pointer"
             onClick={() => onOpenChange(false)}
           >
             Close
           </Button>
           <Button
-            className="bg-blue-700 hover:bg-blue-800 text-white rounded-full px-6"
+            className="bg-blue-700 hover:bg-blue-800 text-white rounded-full px-6 cursor-pointer"
             onClick={() => onEdit(application)}
           >
             Edit Application
