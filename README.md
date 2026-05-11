@@ -2,7 +2,7 @@
 
 Orbit is a modern job application tracking tool designed to help job seekers manage their career journey in one place. Built collaboratively by a remote, cross-functional team as part of the [Chingu Voyage 60](https://www.chingu.io/) program.
 
-![Orbit Dashboard](./docs/screenshots/dashboard.png)
+Demo Link: https://orbit-v60-team24.web.app/
 
 ---
 
