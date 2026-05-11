@@ -115,6 +115,9 @@ export const RegisterPage = () => {
 
   return (
     <div className="flex-1 bg-[#f5f7fb] flex items-center justify-center px-4 relative overflow-hidden">
+      {/* Decorative blurs */}
+      <div className="absolute -top-32 -right-16 w-lg h-128 bg-[#0040a1]/5 rounded-full blur-[60px]" />
+      <div className="absolute -bottom-16 -left-16 w-[384px] h-96 bg-[#006c49]/5 rounded-full blur-[50px]" />
       <div className="w-full max-w-md py-8 md:py-10 lg:py-12 px-4">
         <div className="flex items-center justify-center gap-3 mb-6">
           <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#0040a1_0%,#0056d2_100%)] text-white shadow-lg shadow-blue-900/20">

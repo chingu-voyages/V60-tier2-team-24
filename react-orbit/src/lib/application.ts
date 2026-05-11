@@ -17,7 +17,7 @@ export const applicationSchema = z.object({
     message: "Status is required",
   }),
   JobLink: z.url("Invalid URL format"),
-  Notes: z.string().optional(),
+  Notes: z.string().min(1, "Notes is required"),
   ResumeUrl: z.url().optional(),
   ResumePublicId: z.string().optional(),
 });

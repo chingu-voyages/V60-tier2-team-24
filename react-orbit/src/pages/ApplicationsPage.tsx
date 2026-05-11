@@ -102,7 +102,7 @@ export function ApplicationsPage() {
         <div className="flex items-center justify-between gap-3">
           <Button
             onClick={handleCreate}
-            className="bg-[#0040a1] hover:bg-[#003080] text-white cursor-pointer"
+            className="bg-[#0040a1] hover:bg-[#003080] text-white"
           >
             + Add Application
           </Button>

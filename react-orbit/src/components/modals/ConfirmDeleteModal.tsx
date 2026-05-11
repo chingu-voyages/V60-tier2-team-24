@@ -35,7 +35,7 @@ export default function DeleteConfirmationModal({
         <div className="flex justify-center gap-3">
           <Button
             variant="outline"
-            className="w-full rounded-xl py-5 bg-blue-200 text-gray-700 font-semibold cursor-pointer"
+            className="w-full rounded-xl py-5 bg-blue-200 text-gray-700 font-semibold"
             onClick={() => onOpenChange(false)}
           >
             Cancel
@@ -43,7 +43,7 @@ export default function DeleteConfirmationModal({
 
           <Button
             variant="destructive"
-            className="w-full rounded-xl py-5 font-semibold cursor-pointer"
+            className="w-full rounded-xl py-5 font-semibold"
             onClick={onConfirm}
             disabled={loading}
           >

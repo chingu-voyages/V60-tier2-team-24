@@ -25,7 +25,7 @@ function ApplicationActions({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="cursor-pointer">
+          <Button variant="ghost" size="icon">
             <MoreVertical className="text-gray-400" />
           </Button>
         </DropdownMenuTrigger>
@@ -35,7 +35,7 @@ function ApplicationActions({
           className="border-gray-200 shadow-lg rounded-lg"
         >
           <DropdownMenuItem
-            className="p-4 cursor-pointer"
+            className="p-4"
             onClick={(e) => {
               e.stopPropagation();
               onEdit(application);
@@ -45,7 +45,7 @@ function ApplicationActions({
             <span className="font-semibold text-sm">Edit Application</span>
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="p-4 cursor-pointer"
+            className="p-4"
             onClick={(e) => {
               e.stopPropagation();
               onDelete(id);
