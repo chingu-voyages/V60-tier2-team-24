@@ -160,6 +160,9 @@ react-orbit/
    VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
    VITE_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
    VITE_FIREBASE_APP_ID=your-app-id
+   VITE_UPLOAD_LINK=your-upload-link
+   VITE_UPLOAD_PRESET="react-orbit"
+
    ```
 
 4. **Enable Firebase Authentication**
@@ -200,13 +203,13 @@ Everyone on your team should add their name along with a link to their GitHub
 your repo access and to practice PR'ing with your team _before_ you start
 coding!
 
-- Jose Cruz: [GitHub] https://github.com/Cruz3196 / [LinkedIn] www.linkedin.com/in/jose-cruz-6056322b3
-- Ruth Igwe-Oruta: [GitHub] https://github.com/Xondacc / [LinkedIn] https://www.linkedin.com/in/ruthigwe-oruta/
-- Sasikumar Velmurugan: [GitHub] https://github.com/vel-sk98 / [LinkedIn] https://www.linkedin.com/in/sasivel/
-- Pooja Balachandran: [GitHub] https://github.com/PCoderHub / [LinkedIn] https://www.linkedin.com/in/poojapbalachandran/
-- Eduard: [GitHub] https://github.com/EduardDE7
+- Ruth Igwe-Oruta: [GitHub] (https://github.com/Xondacc) / [LinkedIn] (https://www.linkedin.com/in/ruthigwe-oruta/)
 - Shivani Bhardwaj: [GitHub](https://github.com/shivanibhardwaj0911) / [LinkedIn](https://www.linkedin.com/in/shivanibdwj)
 - Anderson Osayerie: [GitHub](https://github.com/andemosa) / [LinkedIn](https://www.linkedin.com/in/anderson-osayerie/)
+- Sasikumar Velmurugan: [GitHub] (https://github.com/vel-sk98) / [LinkedIn] (https://www.linkedin.com/in/sasivel/)
+- Eduard: [GitHub] (https://github.com/EduardDE7)
+- Pooja Balachandran: [GitHub] (https://github.com/PCoderHub) / [LinkedIn] (https://www.linkedin.com/in/poojapbalachandran/)
+- Jose Cruz: [GitHub] (https://github.com/Cruz31960) / [LinkedIn] (https://www.linkedin.com/in/jose-cruz-6056322b3)
 
 ---
 
