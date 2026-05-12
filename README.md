@@ -136,6 +136,7 @@ react-orbit/
 - [Node.js](https://nodejs.org/) (v18 or higher)
 - [Git](https://git-scm.com/)
 - A [Firebase](https://console.firebase.google.com/) project with Authentication enabled
+- A [Cloudinary](https://cloudinary.com/) account/project configured for file uploads
 
 ### Installation
 
@@ -160,7 +161,7 @@ react-orbit/
    VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
    VITE_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
    VITE_FIREBASE_APP_ID=your-app-id
-   VITE_UPLOAD_LINK=your-upload-link
+   VITE_UPLOAD_LINK="https://api.cloudinary.com/v1_1/:cloud_name/auto/upload"
    VITE_UPLOAD_PRESET="react-orbit"
 
    ```
@@ -170,12 +171,20 @@ react-orbit/
    - Navigate to **Authentication** → **Sign-in method**
    - Enable **Email/Password** and **Google**
 
-5. **Start the development server**
+5. **Configure Cloudinary Uploads**
+   - Create an unsigned upload preset in Cloudinary
+   - Replace `:cloud_name` in `VITE_UPLOAD_LINK`
+   - Set your upload preset name in `VITE_UPLOAD_PRESET`
+
+   Helpful guide:
+   https://dev.to/jakaria/how-to-upload-images-to-cloudinary-from-the-client-side-using-react-and-typescript-kbj
+
+6. **Start the development server**
    ```bash
    npm run dev
    ```
 
-6. **Open in browser**
+7. **Open in browser**
    ```
    http://localhost:3000
    ```
@@ -203,13 +212,13 @@ Everyone on your team should add their name along with a link to their GitHub
 your repo access and to practice PR'ing with your team _before_ you start
 coding!
 
-- Ruth Igwe-Oruta: [GitHub] (https://github.com/Xondacc) / [LinkedIn] (https://www.linkedin.com/in/ruthigwe-oruta/)
+- Ruth Igwe-Oruta: [GitHub](https://github.com/Xondacc) / [LinkedIn](https://www.linkedin.com/in/ruthigwe-oruta/)
 - Shivani Bhardwaj: [GitHub](https://github.com/shivanibhardwaj0911) / [LinkedIn](https://www.linkedin.com/in/shivanibdwj)
 - Anderson Osayerie: [GitHub](https://github.com/andemosa) / [LinkedIn](https://www.linkedin.com/in/anderson-osayerie/)
-- Sasikumar Velmurugan: [GitHub] (https://github.com/vel-sk98) / [LinkedIn] (https://www.linkedin.com/in/sasivel/)
-- Eduard: [GitHub] (https://github.com/EduardDE7)
-- Pooja Balachandran: [GitHub] (https://github.com/PCoderHub) / [LinkedIn] (https://www.linkedin.com/in/poojapbalachandran/)
-- Jose Cruz: [GitHub] (https://github.com/Cruz31960) / [LinkedIn] (https://www.linkedin.com/in/jose-cruz-6056322b3)
+- Sasikumar Velmurugan: [GitHub](https://github.com/vel-sk98) / [LinkedIn](https://www.linkedin.com/in/sasivel/)
+- Eduard: [GitHub](https://github.com/EduardDE7)
+- Pooja Balachandran: [GitHub](https://github.com/PCoderHub) / [LinkedIn](https://www.linkedin.com/in/poojapbalachandran/)
+- Jose Cruz: [GitHub](https://github.com/Cruz31960) / [LinkedIn](https://www.linkedin.com/in/jose-cruz-6056322b3)
 
 ---
 
